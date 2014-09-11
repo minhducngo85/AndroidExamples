@@ -21,7 +21,7 @@ Types of Android application:
 ======================   Manifest file ================================================================
 Android's application manifest:
 
-The manifest file describes the component in the application and how they are bound togehter.
+The manifest file describes the component in the application and how they are bound together.
 The manifest file is also used to specify the application's metadata, its hardware and platform requirements, external libraries 
 and required permission.
 
