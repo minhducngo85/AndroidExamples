@@ -1,0 +1,162 @@
+fundamental Android UI Design:
+	1) Views
+	2) View Groups
+	3) Fragments
+	4) Activity
+
+--------------------------------------------------------------------------------
+Introducing layouts
+
+1) Framelayout: This is the simplest form of layout manager. The frame layout pins each child view within its frame
+2) LinearLayout: The linear layout aligns child views in either vertical or horizontal line.
+3) RelativeLayout: one of the most effective and flexible native layouts, the relative layout let you define the position
+of child view relative to the others and to the screen boundaries.
+4) GridLayout: introduced in Android 4.0 (API level 14). Grid layout uses a rectangular grid to lay out views in a series of rows and columns.
+This can be used to simplify the layout and reduce or eliminate the complex nesting.
+
+---------------------------------------------------------------------------------
+Defining layout
+The preferred way to define a layout is to use XML external resources.
+The following example shows a simple layout:
+<?xml version=”1.0” encoding=”utf-8”?>
+<LinearLayout xmlns:android=”http://schemas.android.com/apk/res/android”
+	android:orientation=”vertical”
+	android:layout_width=”match_parent”
+	android:layout_height=”match_parent”>
+	<TextView
+		android:layout_width=”match_parent”
+		android:layout_height=”wrap_content”
+		android:text=”Enter Text Below”
+	/>
+	<EditText
+		android:layout_width=”match_parent”
+		android:layout_height=”wrap_content”
+		android:text=”Text Goes Here!”
+	/>
+</LinearLayout>
+
+The constants "wrap_content" and "match_parent" are often used rather than an exact value in pixel.
+Other than that when required you can implement the layout in your code.
+The following code snippet demonstrates how to implement the layout in XML resource by Java code: 
+
+	LinearLayout ll = new LinearLayout(this);
+	ll.setOrientation(LinearLayout.VERTICAL);
+	TextView myTextView = new TextView(this);
+	EditText myEditText = new EditText(this);
+	myTextView.setText(“Enter Text Below”);
+	myEditText.setText(“Text Goes Here!”);
+	int lHeight = LinearLayout.LayoutParams.MATCH_PARENT;
+	int lWidth = LinearLayout.LayoutParams.WRAP_CONTENT;
+	ll.addView(myTextView, new LinearLayout.LayoutParams(lHeight, lWidth));
+	ll.addView(myEditText, new LinearLayout.LayoutParams(lHeight, lWidth));
+	setContentView(ll);
+	
+----------------------------------------------------------------------------------
+Using layouts to create device independent user interface
+1) Using linear layout: 
+	is one of the most simple layout and make you easy to create a simple layout but it limits the flexibility.
+	In the most cases, you have to use Linearlayout nested within other layout such a RelativeLayout.
+	
+	<?xml version=”1.0” encoding=”utf-8”?>
+<LinearLayout
+	xmlns:android=”http://schemas.android.com/apk/res/android”
+	android:layout_width=”match_parent”
+	android:layout_height=”match_parent”
+	android:orientation=”vertical”>
+	<LinearLayout
+		android:layout_width=”fill_parent”
+		android:layout_height=”wrap_content”
+		android:orientation=”horizontal”
+		android:padding=”5dp”>
+	<Button
+		android:text=”@string/cancel_button_text”
+		android:layout_width=”fill_parent”
+		android:layout_height=”wrap_content”
+		android:layout_weight=”1”/>
+	<Button
+		android:text=”@string/ok_button_text”
+		android:layout_width=”fill_parent”
+		android:layout_height=”wrap_content”
+		android:layout_weight=”1”/>
+	</LinearLayout>
+	<ListView
+		android:layout_width=”match_parent”
+		android:layout_height=”match_parent”/>
+</LinearLayout>
+
+2) Using relative layout:
+   That provides a great deal of the flexibility.
+   This layout allows you to define the position of views relative to its parent or other views.
+   The example below shows a simple relative layout
+   
+<?xml version=”1.0” encoding=”utf-8”?>
+<RelativeLayout
+	xmlns:android=”http://schemas.android.com/apk/res/android”
+	android:layout_width=”match_parent”
+	android:layout_height=”match_parent”>
+	<LinearLayout
+		android:id=”@+id/button_bar”
+		android:layout_alignParentBottom=”true” // to pin the button bar at the bottom
+		android:layout_width=”fill_parent”
+		android:layout_height=”wrap_content”
+		android:orientation=”horizontal”
+		android:padding=”5dp”>
+		<Button
+			android:text=”@string/cancel_button_text”
+			android:layout_width=”fill_parent”
+			android:layout_height=”wrap_content”
+			android:layout_weight=”1”/>
+		<Button
+			android:text=”@string/ok_button_text”
+			android:layout_width=”fill_parent”
+			android:layout_height=”wrap_content”
+			android:layout_weight=”1”/>
+	</LinearLayout>
+	<ListView
+		android:layout_above=”@id/button_bar”   // to set the position of the listview above the button bar
+		android:layout_alignParentLeft=”true”   // This is also left aligned to the parent.
+		android:layout_width=”match_parent”
+		android:layout_height=”match_parent”>
+	</ListView>
+</RelativeLayout>
+
+----------------------------------------------------
+GridLayout
+
+the following example shows the same layout in the previous sample but this time this is implemented in a GridLayout:
+
+<?xml version=”1.0” encoding=”utf-8”?>
+<GridLayout  // here is the beginning of a grid layout
+	xmlns:android=”http://schemas.android.com/apk/res/android”
+	android:layout_width=”match_parent”
+	android:layout_height=”match_parent”
+	android:orientation=”vertical”>
+	<ListView
+		android:background=”#FF444444”
+		android:layout_gravity=”fill”> // the layout_gravity attribute is used to determine in which direction each element should expand.
+	</ListView>
+	<LinearLayout
+		android:layout_gravity=”fill_horizontal”
+		android:orientation=”horizontal”
+		android:padding=”5dp”>
+	<Button
+		android:text=”Cancel”
+		android:layout_width=”fill_parent”
+		android:layout_height=”wrap_content”
+		android:layout_weight=”1”/>
+	<Button
+		android:text=”OK”
+		android:layout_width=”fill_parent”
+		android:layout_height=”wrap_content”
+		android:layout_weight=”1”/>
+	</LinearLayout>
+</GridLayout>
+
+--------------------------------------------------
+Optimizing layout
+
+Inflated layout directly impacts on performance and responsiveness of your application.
+to keep your application smoothly responsive, it is important to keep your layout as simple as possible. 
+ 
+There is a tool available in Android SDK to assist you in optimizing layout.
+The Lint tool is available as command line or as a window in Eclipse supplied in ADT.
