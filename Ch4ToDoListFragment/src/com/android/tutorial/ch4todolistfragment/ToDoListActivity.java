@@ -26,7 +26,14 @@ public class ToDoListActivity extends Activity implements NewItemFragment.OnNewI
         todoItems = new ArrayList<String>();
 
         // Create the array adapter to bind the array to the listview
-        aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, todoItems);
+
+        // Create the array adapter to bind the array to the ListView
+        // customize the list view by using text view
+        int resID = R.layout.todolist_item;
+        aa = new ArrayAdapter<String>(this, resID, todoItems);
+
+        // default item list view
+        // aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, todoItems);
 
         // Bind the array adapter to the listview.
         todoListFragment.setListAdapter(aa);
