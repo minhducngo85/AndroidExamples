@@ -61,29 +61,25 @@ public class EarthQuakeListFragment extends ListFragment {
             Log.i(TAG, urls[0]);
             // Parse RSS, get items
             return fetchEarthquakes(urls[0]);
-
         }
 
         @Override
         protected void onPostExecute(List<Quake> result) {
             // Create a list adapter
-            ArrayAdapter<Quake> aa = new ArrayAdapter<Quake>(local.getActivity(), android.R.layout.simple_list_item_1, result);
-            local.setListAdapter(aa);
+            adapter = new ArrayAdapter<Quake>(local.getActivity(), android.R.layout.simple_list_item_1, result);
+            local.setListAdapter(adapter);
         }
     }
 
     public List<Quake> fetchEarthquakes(String quakeFeed) {
         Log.i(TAG, "refreshEarthquakes() called");
-        // Get the XML
         URL url;
         try {
             url = new URL(quakeFeed);
             URLConnection connection = url.openConnection();
             HttpURLConnection httpConnection = (HttpURLConnection) connection;
             int responseCode = httpConnection.getResponseCode();
-            Log.i(TAG, "Open connection");
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                Log.i(TAG, "Response Code ok");
                 InputStream in = httpConnection.getInputStream();
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                 DocumentBuilder db = dbf.newDocumentBuilder();
