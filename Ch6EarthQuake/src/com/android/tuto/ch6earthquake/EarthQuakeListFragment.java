@@ -32,9 +32,13 @@ import android.widget.ArrayAdapter;
 public class EarthQuakeListFragment extends ListFragment {
     // A reference to the local object
     private EarthQuakeListFragment local;
-
+    /** The list adapter */
     ArrayAdapter<Quake> adapter;
-    ArrayList<Quake> earthquakes = new ArrayList<Quake>();
+
+    /** List resources */
+    List<Quake> earthquakes = new ArrayList<Quake>();
+
+    /** String tag for debug mode */
     private static final String TAG = "EARTHQUAKE";
 
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -50,14 +54,14 @@ public class EarthQuakeListFragment extends ListFragment {
         GetRSSDataTask task = new GetRSSDataTask();
         String quakeFeed = getString(R.string.quake_feed);
         task.execute(quakeFeed);
-        Log.i(TAG, Thread.currentThread().getName());
+        Log.i(TAG, "Current Thread: " + Thread.currentThread().getName());
     }
 
     private class GetRSSDataTask extends AsyncTask<String, Void, List<Quake>> {
         @Override
         protected List<Quake> doInBackground(String... urls) {
             // Debug the task thread name
-            Log.i(TAG, Thread.currentThread().getName());
+            Log.i(TAG, "Current Thread: " + Thread.currentThread().getName());
             Log.i(TAG, urls[0]);
             // Parse RSS, get items
             return fetchEarthquakes(urls[0]);
@@ -66,13 +70,22 @@ public class EarthQuakeListFragment extends ListFragment {
         @Override
         protected void onPostExecute(List<Quake> result) {
             // Create a list adapter
+            local.earthquakes = result;
             adapter = new ArrayAdapter<Quake>(local.getActivity(), android.R.layout.simple_list_item_1, result);
             local.setListAdapter(adapter);
         }
     }
 
+    /**
+     * fetching earthquake within the day from the feed on the Internet.
+     * 
+     * @param quakeFeed
+     *            the feed link
+     * @return list of earth quakes
+     */
     public List<Quake> fetchEarthquakes(String quakeFeed) {
         Log.i(TAG, "refreshEarthquakes() called");
+        List<Quake> results = new ArrayList<Quake>();
         URL url;
         try {
             url = new URL(quakeFeed);
@@ -87,15 +100,12 @@ public class EarthQuakeListFragment extends ListFragment {
                 // Parse the earthquake feed.
                 Document dom = db.parse(in);
                 Element docEle = dom.getDocumentElement();
-                Log.i(TAG, "DocELement");
-                // Clear the old earthquakes
-                earthquakes.clear();
 
                 // Get a list of each earthquake entry.
                 NodeList nl = docEle.getElementsByTagName("entry");
                 if (nl != null && nl.getLength() > 1) {
                     for (int i = 0; i < nl.getLength(); i++) {
-                        Log.d(TAG, "entry " + i);
+                        // Log.d(TAG, "entry " + i);
                         Element entry = (Element) nl.item(i);
                         Element title = (Element) entry.getElementsByTagName("title").item(0);
                         Element g = (Element) entry.getElementsByTagName("georss:point").item(0);
@@ -147,10 +157,11 @@ public class EarthQuakeListFragment extends ListFragment {
                         // Log.d(TAG, "Location" + l.toString());
                         // Log.d(TAG, "Magnitude: " + magnitude);
 
-                        Quake quake = new Quake(qdate, details, l, magnitude, linkString);
-                        Log.i(TAG, quake.toString());
-                        // Process a newly found earthquake
-                        earthquakes.add(quake);
+                        if (!point.equals("0 -0")) {
+                            Quake quake = new Quake(qdate, details, l, magnitude, linkString);
+                            // Log.i(TAG, quake.toString());
+                            results.add(quake);
+                        }
                     }
                 }
             }
@@ -165,7 +176,7 @@ public class EarthQuakeListFragment extends ListFragment {
         } finally {
 
         }
-        return earthquakes;
+        return results;
     }
 
 }
