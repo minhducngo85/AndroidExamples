@@ -101,6 +101,6 @@ public class Quake {
     public String toString() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH.mm");
         String dateString = sdf.format(date);
-        return dateString;
+        return dateString + ": " + magnitude + " " + details;
     }
 }
