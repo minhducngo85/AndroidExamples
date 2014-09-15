@@ -1,0 +1,47 @@
+Adapter:
+
+Adapters are used to bind data to ViewGroup that extend the AdapterView class.
+
+Some native adapters:
+	1) ArrayAdapter: used to bind adapter view to an array of objects
+	2) SimpleCursorAdapter: The Simple Cursor Adapter enables you to bind the Views within a layout 
+	to specific columns contained within a Cursor (typically returned from a Content Provider query).
+
+
+---------------------------------------------------------------
+Customizing the Array Adapter:
+By default, arrayadapter uses toStrong method to populate the text view. In most cases, you need to customize the arrayadapter to 
+represent the complex data.
+
+public class MyArrayAdapter extends ArrayAdapter<MyClass> {
+	int resource;
+	
+	public MyArrayAdapter(Context context, int _resource, List<MyClass> items) {
+		super(context, _resource, items);
+		resource = _resource;
+	}
+	
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		// Create and inflate the View to display
+		LinearLayout newView;
+		if (convertView == null) {
+			// Inflate a new view if this is not an update.
+			newView = new LinearLayout(getContext());
+			String inflater = Context.LAYOUT_INFLATER_SERVICE;
+			LayoutInflater li;
+			li = (LayoutInflater)getContext().getSystemService(inflater);
+			li.inflate(resource, newView, true);
+		} else {
+			// Otherwise we’ll update the existing View
+			newView = (LinearLayout)convertView;
+		}
+		
+		MyClass classInstance = getItem(position);
+		// TODO Retrieve values to display from the
+		// classInstance variable.
+		// TODO Get references to the Views to populate from the layout.
+		// TODO Populate the Views with object property values.
+		return newView;
+	}
+}

@@ -1,0 +1,330 @@
+****Intents*****************
+
+Intents are used as message-passing mechanism that works both within your application and between applications.
+You can use Intents to do the following:
+
+	1) Explicitly start a particular Service or Activity using its class name
+	2) Start an Activity or Service to perform an action with (or on) a particular piece of data
+	3) Broadcast that an event has occurred
+#################### Using Intents to launch Activities #########################
+Using Intents to Launch Activities
+	The most common use cases of intents is to bind the application components and let them communicate together.
+	To create and display an Activity, call startActivity , passing in an Intent , as follows:
+		
+		startActivity(myIntent);
+
+-----------------------------------------------------------------
+Returning Results from Activities
+
+Where feedback is required, you can start an Activity as a sub-Activity that can pass results back
+to its parent. Like regular Activities, you can start sub-Activities implicitly or explicitly.
+
+Explicitly start a sub-activity for returning result	
+	private static final int SHOW_SUBACTIVITY = 1;
+	
+	private void startSubActivity() {
+		Intent intent = new Intent(this, MyOtherActivity.class);
+		startActivityForResult(intent, SHOW_SUBACTIVITY);
+	}
+
+Implicitly start a sub-activity	
+	private static final int PICK_CONTACT_SUBACTIVITY = 2;
+	
+	private void startSubActivityImplicitly() {
+		Uri uri = Uri.parse(“content://contacts/people”);
+		Intent intent = new Intent(Intent.ACTION_PICK, uri);
+		startActivityForResult(intent, PICK_CONTACT_SUBACTIVITY);
+	}
+
+----------------------------------------------------------
+Native Android Actions
+
+Native Android applications also use Intents to launch Activities and sub-Activities.
+
+The following (noncomprehensive) list shows some of the native actions available as static string
+constants in the Intent class. When creating implicit Intents, you can use these actions, known as
+Activity Intents, to start Activities and sub-Activities within your own applications.
+
+	1) ACTION_ALL_APPS — Opens an Activity that lists all the installed applications. Typically, this
+	is handled by the launcher.
+	
+	2) ACTION_ANSWER — Opens an Activity that handles incoming calls. This is normally handled
+	by the native in-call screen.
+	
+	3) ACTION_BUG_REPORT — Displays an Activity that can report a bug. This is normally handled
+	by the native bug-reporting mechanism.
+	
+	4) ACTION_CALL — Brings up a phone dialer and immediately initiates a call using the num-
+	ber supplied in the Intent’s data URI. This action should be used only for Activities that
+	replace the native dialer application. In most situations it is considered better form to use
+	ACTION_DIAL.
+	
+	5) ACTION_CALL_BUTTON — Triggered when the user presses a hardware “call button.” This
+	typically initiates the dialer Activity.
+	
+	6) ACTION_DELETE — Starts an Activity that lets you delete the data specifi ed at the Intent’s data
+	URI.
+	
+	7) ACTION_DIAL — Brings up a dialer application with the number to dial prepopulated from
+	the Intent’s data URI. By default, this is handled by the native Android phone dialer. The
+	dialer can normalize most number schemas — for example, tel:555-1234 and tel:(212)
+	555 1212 are both valid numbers.
+	
+	8) ACTION_EDIT — Requests an Activity that can edit the data at the Intent’s data URI.
+	
+	9) ACTION_INSERT — Opens an Activity capable of inserting new items into the Cursor specifi ed
+	in the Intent’s data URI. When called as a sub-Activity, it should return a URI to the newly
+	inserted item.
+	
+	10) ACTION_PICK — Launches a sub-Activity that lets you pick an item from the Content
+	Provider specifi ed by the Intent’s data URI. When closed, it should return a URI to the item
+	that was picked. The Activity launched depends on the data being picked — for example,
+	passing content://contacts/people will invoke the native contacts list.
+	
+	11) ACTION_SEARCH — Typically used to launch a specifi c search Activity. When it’s fi red with-
+	out a specifi c Activity, the user will be prompted to select from all applications that support
+	search. Supply the search term as a string in the Intent’s extras using SearchManager.QUERY
+	as the key.
+	
+	12) ACTION_SEARCH_LONG_PRESS — Enables you to intercept long presses on the hardware
+	search key. This is typically handled by the system to provide a shortcut to a voice search.
+	
+	13) ACTION_SENDTO — Launches an Activity to send data to the contact specifi ed by the Intent’s
+	data URI.
+	
+	14) ACTION_SEND — Launches an Activity that sends the data specifi ed in the Intent. The recipient contact needs to be selected by the resolved Activity. Use setType to set the MIME
+	type of the transmitted data. The data itself should be stored as an extra by means of the 
+	key EXTRA_TEXT or EXTRA_STREAM , depending on the type. In the case of email, the native
+	Android applications will also accept extras via the EXTRA_EMAIL , EXTRA_CC , EXTRA_BCC ,
+	and EXTRA_SUBJECT keys. Use the ACTION_SEND action only to send data to a remote recipi-
+	ent (not to another application on the device).
+	
+	15) ACTION_VIEW — This is the most common generic action. View asks that the data supplied
+	in the Intent’s data URI be viewed in the most reasonable manner. Different applications
+	will handle view requests depending on the URI schema of the data supplied. Natively http:
+	addresses will open in the browser; tel: addresses will open the dialer to call the number;
+	geo: addresses will be displayed in the Google Maps application; and contact content will be
+	displayed in the Contact Manager.
+	
+	16) ACTION_WEB_SEARCH — Opens the Browser to perform a web search based on the query sup-
+	plied using the SearchManager.QUERY key.
+
+======================Introducing Linkify=============================================
+Linkify is a helper class that creates hyperlinks within Text View (and Text View-derived) classes
+through RegEx pattern matching.
+
+Text that matches a specified RegEx pattern will be converted into a clickable hyperlink that implic-
+itly fi res startActivity(new Intent(Intent.ACTION_VIEW, uri)) , using the matched text as the
+target URI.
+
+--------------------------------------------------------------------------------------
+Native Linkify Link Types:
+
+Android has a set of intern Linkify to detect telephone number, email address and web url:
+WEB_URLS, EMAIL_ADDRESSES, PHONE_NUMBERS , and ALL .
+
+e.g.
+
+	TextView textView = (TextView)findViewById(R.id.myTextView);
+	Linkify.addLinks(textView, Linkify.WEB_URLS|Linkify.EMAIL_ADDRESSES);
+
+you can also use linkify directly in Android XMl:
+
+	<TextView
+		android:layout_width=”match_parent”
+		android:layout_height=”match_parent”
+		android:text=”@string/linkify_me”
+		android:autoLink=”phone|email” // linkify
+	/>
+
+-----------------------------------------------------------------------------------------
+Creating Custom Link Strings
+
+// Define the base URI.
+String baseUri = “content://com.paad.earthquake/earthquakes/”;
+
+// Contruct an Intent to test if there is an Activity capable of
+// viewing the content you are Linkifying. Use the Package Manager
+// to perform the test.
+PackageManager pm = getPackageManager();
+Intent testIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(baseUri));
+boolean activityExists = testIntent.resolveActivity(pm) != null;
+
+// If there is an Activity capable of viewing the content
+// Linkify the text.
+if (activityExists) {
+	int flags = Pattern.CASE_INSENSITIVE;
+	Pattern p = Pattern.compile(“\\bquake[\\s]?[0-9]+\\b”, flags);
+	Linkify.addLinks(myTextView, p, baseUri);
+}
+
+-----------------------------------------------
+The nao la RegEx
+* : 0 -> vo cung
++ : 1 -> vo cung
+? : 0 -> 1
+є : ky tu trong
+- : mo ta su lien tuc
+...: mo to phep OR
+^ khi dung sau [ : nor hay negation (ngoai tru)
+^a : chuoi ky tu bat dau bang a
+$a : chuoi ky tu ket thuc bang a
+\\b: word
+
+e.g.
+
+
+("ab" | є) = {"ab", ""} 
+(0|1)*: dung de dien ta so nhi phan nhu {,0,01,00,111,01010, ......}
+(a|b|c)+ : tap hop dien ta nhung chu cai (a,b,c,ab,ac,abc,....)
+[abc] tương đương với [a|b|c]
+[a-zA-Z]*  :mo ta tap hop chi chua cac chu cai
+
+e.g.
+String regexp = "[a-zA-Z]+[a-zA-Z ]*";
+
+// khong cho phep khoang trong o dau: [a-zA-Z]+
+// theo sau co the la khoang trong hoac chu cai
+
+Java code:
+
+1) Kiem tra ten nguoi dung
+String test1 = " John Doe"; //invalid
+String test2 = "John Doe"; //valid
+String test3 = "Jhon333"; //invalid
+String regexp = "[a-zA-Z]+[a-zA-Z ]*"; 
+Pattern pattern = Pattern.compile(regexp);
+boolean result1 = pattern.matcher(test1).matches(); //false
+boolean result2 = pattern.matcher(test2).matches(); //true
+boolean result3 = pattern.matcher(test3).matches();//false
+System.out.println(result1 + ":" + result2 + ":" + result3);
+
+2) Kiem tra IP address
+
+Chỉ chua so nguyen, dau cham, va dau *
+Bat dau phai la so nguyen hay *
+Toi da co 3 dau cham va moi mot khuc chi co tu mot den 3 so hay mot dau cham
+
+Vi du nhung dia chi IP hop le
+*
+192.*
+192.1.4.*
+192.*.3.2
+
+truong hop 1: String regex1 = "*";
+truong hop con lai: String regex2 = ([0-9*]{1,3}(.)){1,3}[0-9*]{0,3}
+[0-9*]{1,3}(.) : chuoi la 0 den 9 hoac * co chieu dai 1 den 3 ky tu, theo sau la dau .  
+
+Java code:
+Pattern pattern1 = Pattern.compile("[*]"); //first case
+Pattern pattern2 = Pattern.compile("([0-9*]{1,3}(.)){1,3}[0-9*]{0,3}");
+//nhập pattern1 & pattern2 
+public boolean is IP(String s)
+{
+   return ( pattern1.matcher(s).matches() || pattern2.matcher(s).matches());
+}
+
+String test1 = "192.1.4.6";
+String test2 = "*";
+String test3 = "192.*.4.6";
+String test4 = "192.1.4.*";
+System.out.println(pattern2.matcher(test1).matches());
+System.out.println(pattern1.matcher(test2).matches());
+System.out.println(pattern2.matcher(test3).matches());
+System.out.println(pattern2.matcher(test4).matches());
+
+############ Using Intents to broadcast the events #############################
+you can use intents to send messages anynomously between component via the sendBroadcast method.
+
+e.g. sender
+
+	public static final String NEW_LIFEFORM_DETECTED = “com.paad.action.NEW_LIFEFORM”;
+	.............
+	intent.putExtra(LifeformDetectedReceiver.EXTRA_LIFEFORM_NAME, detectedLifeform);
+	intent.putExtra(LifeformDetectedReceiver.EXTRA_LONGITUDE, currentLongitude);
+	intent.putExtra(LifeformDetectedReceiver.EXTRA_LATITUDE, currentLatitude);
+	sendBroadcast(intent);
+
+e.g. broadcastReceiver:
+
+public class LifeformDetectedReceiver extends BroadcastReceiver {
+	public final static String EXTRA_LIFEFORM_NAME= “EXTRA_LIFEFORM_NAME”;
+	public final static String EXTRA_LATITUDE = “EXTRA_LATITUDE”;
+	public final static String EXTRA_LONGITUDE = “EXTRA_LONGITUDE”;
+	public static final String ACTION_BURN = “com.paad.alien.action.BURN_IT_WITH_FIRE”;
+	
+	public static final String ACTION_BURN = “com.paad.alien.action.BURN_IT_WITH_FIRE”;
+
+	public static final String NEW_LIFEFORM = “com.paad.alien.action.NEW_LIFEFORM”;
+	
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		// Get the lifeform details from the intent.
+		Uri data = intent.getData();
+		String type = intent.getStringExtra(EXTRA_LIFEFORM_NAME);
+		double lat = intent.getDoubleExtra(EXTRA_LATITUDE, 0);
+		double lng = intent.getDoubleExtra(EXTRA_LONGITUDE, 0);
+		Location loc = new Location(“gps”);
+		loc.setLatitude(lat);
+		loc.setLongitude(lng);
+		if (type.equals(“facehugger”)) {
+			Intent startIntent = new Intent(ACTION_BURN, data);
+			startIntent.putExtra(EXTRA_LATITUDE, lat);
+			startIntent.putExtra(EXTRA_LONGITUDE, lng);
+			context.startService(startIntent);
+		}
+	}
+}
+
+registering intent:
+
+in code:
+private IntentFilter filter = new IntentFilter(LifeformDetectedReceiver.NEW_LIFEFORM);
+private LifeformDetectedReceiver receiver = new LifeformDetectedReceiver();
+
+@Override
+public void onResume() {
+	super.onResume();
+	// Register the broadcast receiver.
+	registerReceiver(receiver, filter);
+}
+@Override
+public void onPause() {
+	// Unregister the receiver
+	unregisterReceiver(receiver);
+	super.onPause();
+}
+
+in application manifest:
+<receiver android:name=”.LifeformDetectedReceiver”>
+	<intent-filter>
+		<action android:name=”com.paad.alien.action.NEW_LIFEFORM”/>
+	</intent-filter>
+</receiver>
+
+
+--------------------------------------------------------------
+Introducing the Local Broadcast Manager:
+
+This simplies sending, receiving and registering boradcast withing your application and it ensures you broadcast cannot received by any components outside of your application.
+
+e.g.
+LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+
+recevier:
+lbm.registerReceiver(new BroadcastReceiver() {
+@Override
+	public void onReceive(Context context, Intent intent) {
+		// TODO Handle the received local broadcast
+	}
+}, new IntentFilter(LOCAL_ACTION));
+
+to send:
+
+lbm.sendBroadcast(new Intent(LOCAL_ACTION));
+
+----------------------------------------------------
+Introducing Pending Intents
+
+The PendingIntent class provides a mechanism for creating Intents that can be fi red on your
+application’s behalf by another application at a later time.
