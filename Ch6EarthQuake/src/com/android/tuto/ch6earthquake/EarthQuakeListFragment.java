@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,21 +31,26 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 
 public class EarthQuakeListFragment extends ListFragment {
-    // A reference to the local object
-    private EarthQuakeListFragment local;
+
+    /** A reference to the current instance */
+    private EarthQuakeListFragment currentInstance;
+
     /** The list adapter */
-    ArrayAdapter<Quake> adapter;
+    private ArrayAdapter<Quake> adapter;
 
     /** List resources */
-    List<Quake> earthquakes = new ArrayList<Quake>();
+    private List<Quake> earthquakes = new ArrayList<Quake>();
 
     /** String tag for debug mode */
     private static final String TAG = "EARTHQUAKE";
 
+    /**
+     * Create view once activity created
+     */
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // Set reference to this activity
-        local = this;
+        currentInstance = this;
 
         int layoutID = android.R.layout.simple_list_item_1;
         adapter = new ArrayAdapter<Quake>(this.getActivity(), layoutID, earthquakes);
@@ -57,22 +63,37 @@ public class EarthQuakeListFragment extends ListFragment {
         Log.i(TAG, "Current Thread: " + Thread.currentThread().getName());
     }
 
+    /**
+     * Network operations should always be performed in a background thread — a requirement that is enforced in API level 11 onwards.
+     * 
+     * AsyncTask to read RSS feed data
+     * 
+     * @author minhducngo
+     *
+     */
     private class GetRSSDataTask extends AsyncTask<String, Void, List<Quake>> {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected List<Quake> doInBackground(String... urls) {
             // Debug the task thread name
             Log.i(TAG, "Current Thread: " + Thread.currentThread().getName());
-            Log.i(TAG, urls[0]);
+            Log.i(TAG, "Fetching information from the url: " + urls[0]);
             // Parse RSS, get items
             return fetchEarthquakes(urls[0]);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected void onPostExecute(List<Quake> result) {
-            // Create a list adapter
-            local.earthquakes = result;
-            adapter = new ArrayAdapter<Quake>(local.getActivity(), android.R.layout.simple_list_item_1, result);
-            local.setListAdapter(adapter);
+            currentInstance.earthquakes.clear();
+            currentInstance.earthquakes.addAll(result);
+            // adapter = new ArrayAdapter<Quake>(local.getActivity(), android.R.layout.simple_list_item_1, result);
+            // local.setListAdapter(adapter);
+            currentInstance.adapter.notifyDataSetChanged();
         }
     }
 
@@ -120,7 +141,10 @@ public class EarthQuakeListFragment extends ListFragment {
                             point = g.getFirstChild().getNodeValue();
                         }
                         String dt = when.getFirstChild().getNodeValue();
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'");
+
+                        SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance();
+                        sdf.applyPattern("yyyy-MM-dd'T'hh:mm:ss'Z'");
+
                         Date qdate = new GregorianCalendar(0, 0, 0).getTime();
                         try {
                             qdate = sdf.parse(dt);
