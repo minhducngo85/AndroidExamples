@@ -2,6 +2,9 @@ package com.android.tuto.ch8todolistdatabase;
 
 import java.util.ArrayList;
 
+import com.android.tuto.ch8todolistdatabase.data.ToDoItem;
+import com.android.tuto.ch8todolistdatabase.database.ToDoContentProvider;
+
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.LoaderManager.LoaderCallbacks;

@@ -1,4 +1,4 @@
-package com.android.tuto.ch8todolistdatabase;
+package com.android.tuto.ch8todolistdatabase.data;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -3,6 +3,8 @@ package com.android.tuto.ch8todolistdatabase;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import com.android.tuto.ch8todolistdatabase.data.ToDoItem;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

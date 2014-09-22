@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <provider
-            android:name=".ToDoContentProvider"
+            android:name="com.android.tuto.ch8todolistdatabase.database.ToDoContentProvider"
             android:authorities="com.android.tuto.todoprovider" />
     </application>
 </manifest>

@@ -1,4 +1,4 @@
-package com.android.tuto.ch8todolistdatabase;
+package com.android.tuto.ch8todolistdatabase.database;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
