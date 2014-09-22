@@ -1,0 +1,31 @@
+Introducing SQL Lite:
+
+The content values and cursor:
+
+Each "content values" object represents a single table row as a map of table name and value.
+Cursor provides a managed way of controlling your position in the result set.
+
+1) moveToFirst — Moves the cursor to the first row in the query result
+2) moveToNext — Moves the cursor to the next row
+3) moveToPrevious — Moves the cursor to the previous row
+4) getCount — Returns the number of rows in the result set
+5) getColumnIndexOrThrow — Returns the zero-based index for the column with the specified
+name (throwing an exception if no column exists with that name)
+6) getColumnName — Returns the name of the specified column index
+7) getColumnNames — Returns a string array of all the column names in the current Cursor
+8) moveToPosition — Moves the cursor to the specified row
+9) getPosition — Returns the current cursor position
+
+---------------------------------------------------------------------
+Introducing the SqlLiteOpenHelper
+
+SqlLiteOpenHelper is the abstract class used for creating, opening and upgrading the database. The example for the 
+SqlLiteOpenHelper can be found in the book. (p.255)
+
+Other than that you can use the application context to version control, create, open and upgrade your database.
+
+	QLiteDatabase db = context.openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null)
+	
+----------------------------------------
+
+Content providers provide a mechanism for publishing data that can be consumed later by content resolvers

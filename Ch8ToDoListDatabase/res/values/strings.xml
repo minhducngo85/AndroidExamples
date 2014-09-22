@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Database</string>
+    <string name="addItemHint">Add new to-do item</string>
+    <string name="action_settings">Setting</string>
+</resources>
