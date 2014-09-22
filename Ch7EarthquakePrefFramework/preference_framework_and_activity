@@ -1,0 +1,92 @@
+Preference framework and preference activity
+
+Android offers an XML-driven preference framework. By using this framework you can easily create preference activities,
+which are consistent and used in both native and third-party application.
+
+Advantages:
+	1) Familiar with the layout and use of your settings screens.
+	2) You can integrate settings screens from other applications into your application’s preferences.
+	
+This frameworks consists of four parts:
+
+	1) Preference Screen layout — An XML file that defines the hierarchy of items displayed in your
+	Preference screens. It specifies the text and associated controls to display, the allowed values,
+	and the Shared Preference keys to use for each control.
+	
+	2) Preference Activity and Preference Fragment — Extensions of PreferenceActivity and
+	PreferenceFragment respectively, that are used to host the Preference Screens. Prior to
+	Android 3.0, Preference Activities hosted the Preference Screen directly; since then, Preference
+	Screens are hosted by Preference Fragments, which, in turn, are hosted by Preference
+	Activities.
+	
+	3) Preference Header definition — An XML fi le that defi nes the Preference Fragments for your
+	application and the hierarchy that should be used to display them.
+	
+	4) Shared Preference Change Listener — An implementation of the
+	OnSharedPreferenceChangeListener class used to listen for changes to Shared Preferences.
+
+---------------------------------------
+Each preference control should includes at least the following fours:
+
+	1) android:key — The Shared Preference key against
+	which the selected value will be recorded.
+	
+	2) android:title — The text displayed to represent the
+	preference.
+	
+	3) android:summary — The longer text description dis-
+	played in a smaller font below the title text.
+	
+	4) android:defaultValue — The default value that will be displayed (and selected) if no pref-
+	erence value has been assigned to the associated preference key.
+
+----------------------------------------------
+Native Preference Controls
+There are some native preference controls that help you build your preference screen.
+
+	1) CheckBoxPreference — A standard preference check box control used to set preferences to
+	true or false.
+
+	2) EditTextPreference — Allows users to enter a string value as a preference. Selecting the
+	preference text at run time will display a text-entry dialog.
+
+	3) ListPreference — The preference equivalent of a spinner. Selecting this preference will
+	display a dialog box containing a list of values from which to select. You can specify different
+	arrays to contain the display text and selection values.
+
+	4) MultiSelectListPreference — Introduced in Android 3.0 (API level 11), this is the preference equivalent of a check box list.
+
+	5) RingtonePreference — A specialized List Preference that presents the list of available ring-
+	tones for user selection. This is particularly useful when you’re constructing a screen to con-
+	figure notifi cation settings.
+----------------------------------------
+Including system preferences.
+
+you can include preference screen from other applications by using intents.
+
+<?xml version=”1.0” encoding=”utf-8”?>
+<PreferenceScreen xmlns:android=”http://schemas.android.com/apk/res/android”
+	android:title=”Intent preference”
+	android:summary=”System preference imported using an intent”>
+	<intent android:action=”android.settings.DISPLAY_SETTINGS “/>
+</PreferenceScreen>
+
+<activity android:name=”.UserPreferences” android:label=”My User Preferences”>
+	<intent-filter>
+		<action android:name=”com.paad.myapp.ACTION_USER_PREFERENCE” />
+	</intent-filter>
+</activity>
+
+----------------------------------------
+Preference Fragment
+
+Since Android 3.0 (API level 11 onwards), Android provides the preference fragment to create your preference screen.
+Preference activity is used to host preference fragment
+
+--------------------------------------------------
+Backward Compatibility and Preference Screens
+As noted earlier, the Preference Fragment and associated Preference Headers are not supported on
+Android platforms prior to Android 3.0 (API level 11). As a result, if you want to create applications
+that support devices running on both pre- and post-Honeycomb devices, you need to implement
+separate Preference Activities to support both, and launch the appropriate Activity at run time, as
+shown in Listing 7-3.
