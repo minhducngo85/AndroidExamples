@@ -1,23 +1,20 @@
 package com.android.tuto.ch8todolistdatabase;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.android.tuto.ch8todolistdatabase.data.ToDoItem;
-import com.android.tuto.ch8todolistdatabase.database.ToDoContentProvider;
+import com.android.tuto.ch8todolistdatabase.database.MyDatabaseHelper;
 
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
 
-public class ToDoListActivity extends Activity implements NewItemFragment.OnNewItemAddedListener, LoaderCallbacks<Cursor> {
+public class ToDoListActivity extends Activity implements NewItemFragment.OnNewItemAddedListener {
     private ToDoItemAdapter aa;
     private ArrayList<ToDoItem> todoItems;
+
+    MyDatabaseHelper helper = new MyDatabaseHelper(this, null);
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,45 +35,23 @@ public class ToDoListActivity extends Activity implements NewItemFragment.OnNewI
 
         // Bind the array adapter to the listview.
         todoListFragment.setListAdapter(aa);
-        getLoaderManager().initLoader(0, null, this);
-    }
+        readItems();
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override
     public void onNewItemAdded(String newItem) {
-        /** Save into data base*/
-        ContentResolver cr = getContentResolver();
-        ContentValues values = new ContentValues();
-        values.put(ToDoContentProvider.KEY_TASK, newItem);
-        cr.insert(ToDoContentProvider.CONTENT_URI, values);
-        getLoaderManager().restartLoader(0, null, this);
+        /** Save into data base */
+        ToDoItem item = new ToDoItem(newItem);
+        helper.addToDoItem(item);
+        readItems();
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        CursorLoader loader = new CursorLoader(this, ToDoContentProvider.CONTENT_URI, null, null, null, null);
-        return loader;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        int keyTaskIndex = data.getColumnIndexOrThrow(ToDoContentProvider.KEY_TASK);
+    public void readItems() {
+        List<ToDoItem> items = helper.getToDoItems();
         todoItems.clear();
-        while (data.moveToNext()) {
-            ToDoItem newItem = new ToDoItem(data.getString(keyTaskIndex));
-            todoItems.add(newItem);
-        }
+        todoItems.addAll(items);
         aa.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        // TODO Auto-generated method stub
     }
 
 }
