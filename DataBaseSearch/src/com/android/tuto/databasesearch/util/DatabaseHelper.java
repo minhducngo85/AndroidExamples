@@ -1,11 +1,23 @@
 package com.android.tuto.databasesearch.util;
 
+import java.io.InputStream;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
+import com.android.tuto.databasesearch.R;
+
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import android.widget.Toast;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -16,18 +28,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_TITLE = "title";
 
     public static final String COL_OFFICE_PHONE = "office_phone";
-    
+
     public static final String COL_CELL_PHONE = "cell_phone";
-    
+
     public static final String COL_EMAIL = "email";
-    
+
+    public static final String COL_DEPARTMENT = "department";
+
+    public static final String COL_CITY = "city";
+
+    public static final String COL_PICTURE = "picture";
+
     public static final String COL_MANAGER_ID = "manager_id";
 
     public static final String TABLE_EMPLOYEE = "employee";
 
     public static final String DATABASE_NAME = "employee.db";
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     protected Context context;
 
@@ -43,84 +61,74 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @SuppressLint("ShowToast")
     @Override
     public void onCreate(SQLiteDatabase db) {
-        /*
-         * Create the employee table and populate it with sample data. In step 6, we will move these hardcoded statements to an XML document.
-         */
-        String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_EMPLOYEE + " (" + "_id INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_FIRST_NAME + " TEXT, "
-                + COL_LAST_NAME + " TEXT, " + COL_TITLE + " TEXT, " + COL_OFFICE_PHONE + " TEXT, " + COL_CELL_PHONE + " TEXT, " + COL_EMAIL
-                + " TEXT, " + COL_MANAGER_ID + " INTEGER)";
-        db.execSQL(sql);
-
-        ContentValues values = new ContentValues();
-
-        values.put(COL_FIRST_NAME, "John");
-        values.put(COL_LAST_NAME, "Smith");
-        values.put(COL_TITLE, "CEO");
-        values.put(COL_OFFICE_PHONE, "617-219-2001");
-        values.put(COL_CELL_PHONE, "617-456-7890");
-        values.put(COL_EMAIL, "jsmith@email.com");
-        db.insert(TABLE_EMPLOYEE, COL_LAST_NAME, values);
-
-        values.put(COL_FIRST_NAME, "Robert");
-        values.put(COL_LAST_NAME, "Jackson");
-        values.put(COL_TITLE, "VP Engineering");
-        values.put(COL_OFFICE_PHONE, "617-219-3333");
-        values.put(COL_CELL_PHONE, "781-444-2222");
-        values.put(COL_EMAIL, "rjackson@email.com");
-        values.put(COL_MANAGER_ID, "1");
-        db.insert(TABLE_EMPLOYEE, COL_LAST_NAME, values);
-
-        values.put(COL_FIRST_NAME, "Marie");
-        values.put(COL_LAST_NAME, "Potter");
-        values.put(COL_TITLE, "VP Sales");
-        values.put(COL_OFFICE_PHONE, "617-219-2002");
-        values.put(COL_CELL_PHONE, "987-654-3210");
-        values.put(COL_EMAIL, "mpotter@email.com");
-        values.put(COL_MANAGER_ID, "1");
-        db.insert(TABLE_EMPLOYEE, COL_LAST_NAME, values);
-
-        values.put(COL_FIRST_NAME, "Lisa");
-        values.put(COL_LAST_NAME, "Jordan");
-        values.put(COL_TITLE, "VP Marketing");
-        values.put(COL_OFFICE_PHONE, "617-219-2003");
-        values.put(COL_CELL_PHONE, "987-654-7777");
-        values.put(COL_EMAIL, "ljordan@email.com");
-        values.put(COL_MANAGER_ID, "2");
-        db.insert(TABLE_EMPLOYEE, COL_LAST_NAME, values);
-
-        values.put(COL_FIRST_NAME, "Christophe");
-        values.put(COL_LAST_NAME, "Coenraets");
-        values.put(COL_TITLE, "Evangelist");
-        values.put(COL_OFFICE_PHONE, "617-219-0000");
-        values.put(COL_CELL_PHONE, "617-666-7777");
-        values.put(COL_EMAIL, "ccoenrae@adobe.com");
-        values.put(COL_MANAGER_ID, "2");
-        db.insert(TABLE_EMPLOYEE, COL_LAST_NAME, values);
-
-        values.put(COL_FIRST_NAME, "Paula");
-        values.put(COL_LAST_NAME, "Brown");
-        values.put(COL_TITLE, "Director Engineering");
-        values.put(COL_OFFICE_PHONE, "617-612-0987");
-        values.put(COL_CELL_PHONE, "617-123-9876");
-        values.put(COL_EMAIL, "pbrown@email.com");
-        values.put(COL_MANAGER_ID, "2");
-        db.insert(TABLE_EMPLOYEE, COL_LAST_NAME, values);
-
-        values.put(COL_FIRST_NAME, "Mark");
-        values.put(COL_LAST_NAME, "Taylor");
-        values.put(COL_TITLE, "Lead Architect");
-        values.put(COL_OFFICE_PHONE, "617-444-1122");
-        values.put(COL_CELL_PHONE, "617-555-3344");
-        values.put(COL_EMAIL, "mtaylor@email.com");
-        values.put(COL_MANAGER_ID, "2");
-        db.insert(TABLE_EMPLOYEE, COL_LAST_NAME, values);
+        String s;
+        try {
+            Toast.makeText(context, "1", 2000).show();
+            InputStream in = context.getResources().openRawResource(R.raw.sql);
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document doc = builder.parse(in, null);
+            NodeList statements = doc.getElementsByTagName("statement");
+            for (int i = 0; i < statements.getLength(); i++) {
+                s = statements.item(i).getChildNodes().item(0).getNodeValue();
+                db.execSQL(s);
+            }
+        } catch (Throwable t) {
+            Toast.makeText(context, t.toString(), 50000).show();
+        }
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.w("DATABASE_SEARCH", "Update db version from " + oldVersion + " to version " + newVersion);
         db.execSQL("DROP TABLE IF EXISTS employees");
         onCreate(db);
+    }
+
+    /**
+     * to find an employee from db
+     * 
+     * @param id
+     *            the row id
+     * @return the raw data
+     */
+    public Cursor findEmployeeById(long id) {
+        String sql = "SELECT * FROM " + DatabaseHelper.TABLE_EMPLOYEE + " WHERE _id = ?";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(sql, new String[] { "" + id });
+        return cursor;
+    }
+
+    /**
+     * search employees from db
+     * 
+     * @param searchString
+     *            the search string. in case, the search string is equal to null or empty, then returns all rows
+     * @return the raw data
+     */
+    public Cursor searchEmployees(String searchString) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        if (searchString == null || searchString.trim().isEmpty()) {
+            return db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_EMPLOYEE, null);
+        }
+        String sql = "SELECT * FROM " + DatabaseHelper.TABLE_EMPLOYEE + " WHERE first_name || ' ' || last_name LIKE ?";
+
+        Cursor cursor = db.rawQuery(sql, new String[] { "%" + searchString + "%" });
+        return cursor;
+    }
+
+    /**
+     * executes a readable query
+     * 
+     * @param query
+     *            the sql query
+     * @param selectionArgs
+     *            the selection arguments
+     * @return the raw data
+     */
+    public Cursor excuteReadableQuery(String query, String[] selectionArgs) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery(query, selectionArgs);
     }
 
 }

@@ -5,7 +5,6 @@ import com.android.tuto.databasesearch.util.DatabaseHelper;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -53,6 +52,9 @@ public class EmployeeList extends ListActivity {
                 return false;
             }
         });
+
+        // list all rows
+        search(null);
     }
 
     /**
@@ -64,8 +66,7 @@ public class EmployeeList extends ListActivity {
     @SuppressWarnings("deprecation")
     public void search(View view) {
         String searchString = searchText.getText().toString().trim();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM employee WHERE first_name || ' ' || last_name LIKE ?", new String[] { "%" + searchString + "%" });
+        Cursor cursor = dbHelper.searchEmployees(searchString);
         adapter = new SimpleCursorAdapter(this, R.layout.employee_list_item, cursor, new String[] { DatabaseHelper.COL_FIRST_NAME,
                 DatabaseHelper.COL_LAST_NAME, DatabaseHelper.COL_TITLE }, new int[] { R.id.firstName, R.id.lastName, R.id.title });
         // employeeListView.setAdapter(adapter);
