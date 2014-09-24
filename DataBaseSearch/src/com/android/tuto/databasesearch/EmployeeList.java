@@ -63,12 +63,11 @@ public class EmployeeList extends ListActivity {
      * @param view
      *            the current view
      */
-    @SuppressWarnings("deprecation")
     public void search(View view) {
         String searchString = searchText.getText().toString().trim();
         Cursor cursor = dbHelper.searchEmployees(searchString);
         adapter = new SimpleCursorAdapter(this, R.layout.employee_list_item, cursor, new String[] { DatabaseHelper.COL_FIRST_NAME,
-                DatabaseHelper.COL_LAST_NAME, DatabaseHelper.COL_TITLE }, new int[] { R.id.firstName, R.id.lastName, R.id.title });
+                DatabaseHelper.COL_LAST_NAME, DatabaseHelper.COL_TITLE }, new int[] { R.id.firstName, R.id.lastName, R.id.title }, 0);
         // employeeListView.setAdapter(adapter);
         setListAdapter(adapter);
     }

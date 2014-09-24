@@ -2,10 +2,9 @@ package com.android.tuto.databasesearch;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.android.tuto.databasesearch.data.EmployeeAction;
 import com.android.tuto.databasesearch.util.DatabaseHelper;
-
+import android.annotation.SuppressLint;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -39,7 +38,6 @@ public class EmployeeDetails extends ListActivity {
         setContentView(R.layout.employee_details);
         employeeId = getIntent().getExtras().getInt("EMPLOYEE_ID", 0);
 
-        
         DatabaseHelper helper = new DatabaseHelper(this);
         Cursor cursor = helper.findEmployeeById(employeeId);
         if (cursor.getCount() == 1) {
@@ -78,8 +76,13 @@ public class EmployeeDetails extends ListActivity {
                     managerCursor.moveToNext();
                     String managerName = managerCursor.getString(managerCursor.getColumnIndex(DatabaseHelper.COL_FIRST_NAME)) + " "
                             + managerCursor.getString(managerCursor.getColumnIndex(DatabaseHelper.COL_LAST_NAME));
-                    actions.add(new EmployeeAction("View manager", managerName, EmployeeAction.ACTION_VIEW));
+                    actions.add(new EmployeeAction("View manager", managerName, EmployeeAction.ACTION_MANAGER));
                 }
+            }
+
+            Cursor reportsCursor = helper.getDirectReports(employeeId);
+            if (reportsCursor.getCount() > 0) {
+                actions.add(new EmployeeAction("Direct reports", "(" + reportsCursor.getCount() + ")", EmployeeAction.ACTION_REPORTS));
             }
 
             adapter = new EmployeeActionAdapter();
@@ -110,9 +113,13 @@ public class EmployeeDetails extends ListActivity {
             Uri smsUri = Uri.parse("sms:" + action.getData());
             intent = new Intent(Intent.ACTION_VIEW, smsUri);
             startActivity(intent);
-        } else if (action.getType() == EmployeeAction.ACTION_VIEW) {
+        } else if (action.getType() == EmployeeAction.ACTION_MANAGER) {
             intent = new Intent(this, EmployeeDetails.class);
             intent.putExtra("EMPLOYEE_ID", managerId);
+            startActivity(intent);
+        } else if (action.getType() == EmployeeAction.ACTION_REPORTS) {
+            intent = new Intent(this, DirectReports.class);
+            intent.putExtra("EMPLOYEE_ID", employeeId);
             startActivity(intent);
         }
     }
@@ -130,6 +137,7 @@ public class EmployeeDetails extends ListActivity {
          * 
          * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
          */
+        @SuppressLint("ViewHolder")
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             EmployeeAction action = actions.get(position);

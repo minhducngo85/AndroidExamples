@@ -118,6 +118,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * gets direct reports of a given employee id
+     * 
+     * @param employeeId
+     *            the employee id
+     * @return raw data
+     */
+    public Cursor getDirectReports(int employeeId) {
+        String sql = "SELECT * FROM " + DatabaseHelper.TABLE_EMPLOYEE + " WHERE " + DatabaseHelper.COL_MANAGER_ID + " = ?";
+        return this.excuteReadableQuery(sql, new String[] { "" + employeeId });
+    }
+
+    /**
      * executes a readable query
      * 
      * @param query

@@ -11,7 +11,7 @@ public class EmployeeAction {
 	public static final int ACTION_CALL = 1;
 	public static final int ACTION_SMS = 2;
 	public static final int ACTION_EMAIL = 3;
-	public static final int ACTION_VIEW = 4;
+	public static final int ACTION_MANAGER = 4;
 	public static final int ACTION_REPORTS = 5;
 
 	public EmployeeAction(String label, String data, int type) {
