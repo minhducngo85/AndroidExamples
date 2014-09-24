@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="PREF_AUTO_UPDATE"
+        android:summary="Select to turn on automatic update"
+        android:title="Auto refesh" />
+    <ListPreference
+        android:defaultValue="60"
+        android:dialogTitle="Refresh frequency"
+        android:entries="@array/update_freq_options"
+        android:entryValues="@array/update_freq_values"
+        android:key="PREF_UPDATE_FREQ"
+        android:summary="Time period to refresh earthquake list "
+        android:title="Refresh frequency" />
+    <ListPreference
+        android:defaultValue="3"
+        android:dialogTitle="Magnitude"
+        android:entries="@array/magnitude_options"
+        android:entryValues="@array/magnitude_values"
+        android:key="PREF_MIN_MAGNITUDE"
+        android:summary="The minum value of magnitude"
+        android:title="Minimum magnitude" />
+</PreferenceScreen>

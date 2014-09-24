@@ -2,9 +2,10 @@ package com.android.tuto.databasesearch;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.android.tuto.databasesearch.data.EmployeeAction;
 import com.android.tuto.databasesearch.util.DatabaseHelper;
-import android.annotation.SuppressLint;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,7 +40,7 @@ public class EmployeeDetails extends ListActivity {
         setContentView(R.layout.employee_details);
         employeeId = getIntent().getExtras().getInt("EMPLOYEE_ID", 0);
 
-        DatabaseHelper helper = new DatabaseHelper(this);
+        DatabaseHelper helper = DatabaseHelper.getInstance(this);
         Cursor cursor = helper.findEmployeeById(employeeId);
         if (cursor.getCount() == 1) {
             cursor.moveToNext();
@@ -137,19 +139,31 @@ public class EmployeeDetails extends ListActivity {
          * 
          * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
          */
-        @SuppressLint("ViewHolder")
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            EmployeeAction action = actions.get(position);
+            EmployeeAction action = getItem(position);
+            LinearLayout layoutView;
+            if (convertView == null) {
+                // Inflate a new view if this is not an update.
+                layoutView = new LinearLayout(getContext());
+                //LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater li = getLayoutInflater();
+                li.inflate(R.layout.action_list_item, layoutView, true);
+            } else {
+                // Otherwise we'll update the existing View
+                layoutView = (LinearLayout) convertView;
+            }
 
-            LayoutInflater inflater = getLayoutInflater();
-            View view = inflater.inflate(R.layout.action_list_item, parent, false);
-            TextView label = (TextView) view.findViewById(R.id.label);
+            /** the deprecated way to inflate view */
+            // LayoutInflater inflater = getLayoutInflater();
+            // View view = inflater.inflate(R.layout.action_list_item, parent, false);
+
+            TextView label = (TextView) layoutView.findViewById(R.id.label);
             label.setText(action.getLabel());
 
-            TextView data = (TextView) view.findViewById(R.id.data);
+            TextView data = (TextView) layoutView.findViewById(R.id.data);
             data.setText(action.getData());
-            return view;
+            return layoutView;
         }
 
         public EmployeeActionAdapter() {

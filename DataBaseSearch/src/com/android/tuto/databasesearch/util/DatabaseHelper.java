@@ -14,7 +14,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
@@ -49,13 +48,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     protected Context context;
 
-    protected DatabaseHelper(Context context, String name, CursorFactory factory, int version) {
-        super(context, name, factory, version);
-    }
+    private static DatabaseHelper instance = null;
 
-    public DatabaseHelper(Context context) {
+    private DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
+    }
+
+    public static DatabaseHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new DatabaseHelper(context);
+        }
+        return instance;
     }
 
     @SuppressLint("ShowToast")

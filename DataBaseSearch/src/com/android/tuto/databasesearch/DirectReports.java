@@ -31,7 +31,7 @@ public class DirectReports extends ListActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.direct_reports);
-        dbHelper = new DatabaseHelper(this);
+        dbHelper = DatabaseHelper.getInstance(this);
 
         employeeName = (TextView) findViewById(R.id.directReportOfName);
         title = (TextView) findViewById(R.id.directReportOfTitle);

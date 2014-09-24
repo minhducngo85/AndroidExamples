@@ -37,7 +37,7 @@ public class EmployeeList extends ListActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        dbHelper = new DatabaseHelper(this);
+        dbHelper = DatabaseHelper.getInstance(this);
         searchText = (EditText) findViewById(R.id.searchText);
         // employeeListView = (ListView) findViewById(R.id.list);
 
