@@ -42,7 +42,6 @@ public class EmployeeList extends ListActivity {
         // employeeListView = (ListView) findViewById(R.id.list);
 
         searchText.setOnKeyListener(new View.OnKeyListener() {
-
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER)) {

@@ -146,7 +146,7 @@ public class EmployeeDetails extends ListActivity {
             if (convertView == null) {
                 // Inflate a new view if this is not an update.
                 layoutView = new LinearLayout(getContext());
-                //LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                // LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 LayoutInflater li = getLayoutInflater();
                 li.inflate(R.layout.action_list_item, layoutView, true);
             } else {
