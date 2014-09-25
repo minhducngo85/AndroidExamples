@@ -45,8 +45,6 @@ public class EarthquakeUpdateService extends Service {
 
     private String TAG = "EARTHQUAKE_SERVICE";
 
-    private Timer updateTimer;
-
     private static final String SERVICE_NAME = "earthquakeUpdates";
 
     /**
@@ -67,7 +65,7 @@ public class EarthquakeUpdateService extends Service {
     @Override
     public void onCreate() {
         Log.i(TAG, "oncreate()  wihtin service called");
-        updateTimer = new Timer(SERVICE_NAME);
+        
     }
 
     /*
@@ -81,10 +79,10 @@ public class EarthquakeUpdateService extends Service {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         int updateFreq = Integer.parseInt(prefs.getString(PreferencesActivity.PREF_UPDATE_FREQ, "60"));
         boolean autoUpdateChecked = prefs.getBoolean(PreferencesActivity.PREF_AUTO_UPDATE, false);
-
+        
+        Timer updateTimer = new Timer(SERVICE_NAME);
         updateTimer.cancel();
         if (autoUpdateChecked) {
-            updateTimer = new Timer(SERVICE_NAME);
             updateTimer.schedule(doRefesh, 0, updateFreq * 60 * 1000);
         } else {
             FeedReader task = new FeedReader();
