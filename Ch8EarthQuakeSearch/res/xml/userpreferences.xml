@@ -18,7 +18,7 @@
         android:dialogTitle="Magnitude"
         android:entries="@array/magnitude_options"
         android:entryValues="@array/magnitude_values"
-        android:key="PREF_MIN_MAGNITUDE"
+        android:key="PREF_MIN_MAG"
         android:summary="The minum value of magnitude"
         android:title="Minimum magnitude" />
 </PreferenceScreen>
