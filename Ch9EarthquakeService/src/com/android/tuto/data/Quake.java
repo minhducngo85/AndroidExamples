@@ -103,9 +103,9 @@ public class Quake {
     @Override
     public String toString() {
         SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance();
-        sdf.applyPattern("HH:mm");
+        sdf.applyPattern("yyyy-MM-dd HH:mm:ss");
         String dateString = sdf.format(date);
-        return dateString + " - M " + magnitude + " - Details: " + details;
+        return dateString + " - M " + magnitude + "\nDetails: " + details;
     }
 
     /*

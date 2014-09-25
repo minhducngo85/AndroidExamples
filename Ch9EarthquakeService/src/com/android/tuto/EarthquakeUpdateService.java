@@ -47,6 +47,8 @@ public class EarthquakeUpdateService extends Service {
 
     private static final String SERVICE_NAME = "earthquakeUpdates";
 
+    private Timer updateTimer = null;
+
     /**
      * Services can be bound to Activities, with the latter maintaining a reference to an instance of the former, enabling you to make method calls on
      * the running Service as you would on any other instantiated class.
@@ -65,7 +67,7 @@ public class EarthquakeUpdateService extends Service {
     @Override
     public void onCreate() {
         Log.i(TAG, "oncreate()  wihtin service called");
-        
+
     }
 
     /*
@@ -79,10 +81,10 @@ public class EarthquakeUpdateService extends Service {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         int updateFreq = Integer.parseInt(prefs.getString(PreferencesActivity.PREF_UPDATE_FREQ, "60"));
         boolean autoUpdateChecked = prefs.getBoolean(PreferencesActivity.PREF_AUTO_UPDATE, false);
-        
-        Timer updateTimer = new Timer(SERVICE_NAME);
-        updateTimer.cancel();
+
+        // updateTimer.cancel();
         if (autoUpdateChecked) {
+            updateTimer = new Timer(SERVICE_NAME);
             updateTimer.schedule(doRefesh, 0, updateFreq * 60 * 1000);
         } else {
             FeedReader task = new FeedReader();
@@ -100,12 +102,10 @@ public class EarthquakeUpdateService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-    private void addNewQuake(Quake quake) {
-        dbHelper = DatabaseHelper.getInstance(getApplicationContext());
-        if (dbHelper.findQuakeByDate(quake.getDate().getTime()) == null) {
-            dbHelper.addQuake(quake);
+        Log.i(TAG, "destroy service");
+        if (updateTimer != null) {
+            doRefesh.cancel();
+            updateTimer.cancel();
         }
     }
 
@@ -120,6 +120,13 @@ public class EarthquakeUpdateService extends Service {
             }
         }
     };
+
+    private void addNewQuake(Quake quake) {
+        dbHelper = DatabaseHelper.getInstance(getApplicationContext());
+        if (dbHelper.findQuakeByDate(quake.getDate().getTime()) == null) {
+            dbHelper.addQuake(quake);
+        }
+    }
 
     /**
      * fetching earthquake within the day from the feed on the Internet.
