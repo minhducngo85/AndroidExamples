@@ -62,7 +62,7 @@ public class EarthquakeListFragment extends ListFragment {
      */
     public void searchquakes(String searchString){
         Log.i(TAG, searchString);
-        EarthquakeDatabaseHelper helper = new EarthquakeDatabaseHelper(this.getActivity().getApplication());
+        EarthquakeDatabaseHelper helper = EarthquakeDatabaseHelper.getInstance(this.getActivity().getApplication());
         earthquakes.clear();
         earthquakes.addAll(helper.searchQuakes(searchString));
         adapter.notifyDataSetChanged();

@@ -36,6 +36,8 @@ public class EarthquakeDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "EARTHQUAKE";
 
+    private static EarthquakeDatabaseHelper instance = null;
+
     /**
      * 
      * @param context
@@ -43,8 +45,20 @@ public class EarthquakeDatabaseHelper extends SQLiteOpenHelper {
      * @param factorykey
      *            the cursor factory
      */
-    public EarthquakeDatabaseHelper(Context context) {
+    private EarthquakeDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    /**
+     * 
+     * @param context
+     * @return
+     */
+    public static EarthquakeDatabaseHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new EarthquakeDatabaseHelper(context);
+        }
+        return instance;
     }
 
     @Override
@@ -139,6 +153,14 @@ public class EarthquakeDatabaseHelper extends SQLiteOpenHelper {
         }
         return quakes;
     }
+    
+    public Cursor searchQuakesAsRawData(String searchString) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_EARTHQUAKE + " WHERE " + COL_SUMMARY_3 + " LIKE '%" + searchString + "%'" + " ORDER BY " + COL_DATE_1
+                + " DESC";
+        Cursor cursor = db.rawQuery(query, null);
+        return cursor;
+    }
 
     /**
      * to save an entry into db
@@ -159,5 +181,7 @@ public class EarthquakeDatabaseHelper extends SQLiteOpenHelper {
         db.insert(TABLE_EARTHQUAKE, null, values);
         db.close();
     }
+    
+    
 
 }

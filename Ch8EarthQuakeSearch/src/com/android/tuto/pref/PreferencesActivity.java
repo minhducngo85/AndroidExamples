@@ -19,7 +19,8 @@ public class PreferencesActivity extends PreferenceActivity {
 
 	public static final String PREF_UPDATE_FREQ = "PREF_UPDATE_FREQ";
 
-	@Override
+	@SuppressWarnings("deprecation")
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.userpreferences);

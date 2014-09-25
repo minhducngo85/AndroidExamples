@@ -4,7 +4,7 @@ import com.android.tuto.data.util.FeedReader;
 import com.android.tuto.data.util.SharedPreferencesUtil;
 import com.android.tuto.pref.PreferencesActivity;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
@@ -16,12 +16,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-public class Earthquake extends ActionBarActivity {
+public class Earthquake extends Activity {
     /** Preference menu index */
     private static final int MENU_PREFERENCES = Menu.FIRST + 1;
 
     /** acces code to show preference activity by intent */
     private static final int SHOW_PREFERENCES = 1;
+
+    private static final int SHOW_SEARCH_RESULTS = 2;
 
     private static final String TAG = "EARTHQUAKE";
 
@@ -41,9 +43,7 @@ public class Earthquake extends ActionBarActivity {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER)) {
-                    FragmentManager fm = getFragmentManager();
-                    EarthquakeListFragment earthquakeListFrag = (EarthquakeListFragment) fm.findFragmentById(R.id.EarthquakeListFragment);
-                    earthquakeListFrag.searchquakes(searchView.getText().toString().trim());
+                    openSearchResults();
                     return true;
                 }
                 return false;
@@ -53,6 +53,13 @@ public class Earthquake extends ActionBarActivity {
         Context context = getApplicationContext();
         prefsUtil = new SharedPreferencesUtil(context);
         readSharedPreferences();
+    }
+
+    private void openSearchResults() {
+        String searchString = searchView.getText().toString().trim();
+        Intent intent = new Intent(this, EarthquakeSearchResults.class);
+        intent.putExtra("SEARCH_STRING", searchString);
+        startActivityForResult(intent, SHOW_SEARCH_RESULTS);
     }
 
     /*
@@ -89,6 +96,9 @@ public class Earthquake extends ActionBarActivity {
         return false;
     }
 
+    /**
+     * deals with result returned back from intent
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -101,6 +111,8 @@ public class Earthquake extends ActionBarActivity {
             FeedReader task = new FeedReader(earthquakeListFrag, minimumMagnitude);
             String quakeFeed = getString(R.string.quake_feed);
             task.execute(quakeFeed);
+        } else if (requestCode == SHOW_SEARCH_RESULTS) {
+            searchView.setText("");
         }
     }
 

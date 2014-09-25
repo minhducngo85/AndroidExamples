@@ -181,7 +181,7 @@ public class FeedReader extends AsyncTask<String, Void, List<Quake>> {
      * save new quakes into db
      */
     public void saveQuakeIntoDB() {
-        EarthquakeDatabaseHelper dbHelper = new EarthquakeDatabaseHelper(listFragmentInstance.getActivity().getApplicationContext());
+        EarthquakeDatabaseHelper dbHelper = EarthquakeDatabaseHelper.getInstance(listFragmentInstance.getActivity().getApplicationContext());
         for (Quake item : listFragmentInstance.getEarthquakes()) {
             if (dbHelper.findQuakeByDate(item.getDate().getTime()) == null) {
                 dbHelper.addQuake(item);
@@ -190,7 +190,7 @@ public class FeedReader extends AsyncTask<String, Void, List<Quake>> {
     }
 
     public void readAllQuakes() {
-        EarthquakeDatabaseHelper dbHelper = new EarthquakeDatabaseHelper(listFragmentInstance.getActivity().getApplicationContext());
+        EarthquakeDatabaseHelper dbHelper = EarthquakeDatabaseHelper.getInstance(listFragmentInstance.getActivity().getApplicationContext());
         for (Quake item : dbHelper.getAllQuakes()) {
             Log.i(TAG, item.getId() + " -> " + item.toString());
         }
