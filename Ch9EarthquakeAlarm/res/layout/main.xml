@@ -1,0 +1,19 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="4dp" >
+    <EditText
+        android:id="@+id/searchText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search..." />
+    <fragment
+        android:layout_marginTop="5dp"
+        android:id="@+id/EarthquakeListFragment"
+        android:name="com.android.tuto.ch9.alarm.EarthquakeListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent" />
+</LinearLayout>
