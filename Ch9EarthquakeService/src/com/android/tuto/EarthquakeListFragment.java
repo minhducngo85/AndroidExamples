@@ -4,6 +4,7 @@ import com.android.tuto.pref.PreferencesActivity;
 import com.android.tuto.util.DatabaseHelper;
 
 import android.app.ListFragment;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -26,9 +27,11 @@ public class EarthquakeListFragment extends ListFragment {
         Log.i(TAG, "EarthQuakeListFragment: onActivityCreated(Bundle savedInstanceState)called");
         super.onActivityCreated(savedInstanceState);
         refreshQuakes();
-
     }
 
+    /**
+     * reads quakes from db and update ui
+     */
     public void refreshQuakes() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         int minMagnitude = Integer.parseInt(prefs.getString(PreferencesActivity.PREF_MIN_MAG, "3"));

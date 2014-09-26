@@ -3,6 +3,8 @@ package com.android.tuto;
 import com.android.tuto.pref.PreferencesActivity;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.widget.TextView;
 
 public class Earthquake extends Activity {
+
     /** Preference menu index */
     private static final int MENU_PREFERENCES = Menu.FIRST + 1;
 
@@ -30,8 +33,6 @@ public class Earthquake extends Activity {
     SharedPreferences prefs;
 
     private TextView searchView;
-
-    Intent serviceIntent;
 
     /** Called when the activity is first created. */
     @Override
@@ -55,8 +56,8 @@ public class Earthquake extends Activity {
         Context context = getApplicationContext();
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         updateFromPreferences();
-        serviceIntent = new Intent(this, EarthquakeUpdateService.class);
-        startService(serviceIntent);
+        // start service
+        Earthquake.startService(EarthquakeUpdateService.class, this);
     }
 
     private void openSearchResults() {
@@ -115,9 +116,7 @@ public class Earthquake extends Activity {
             /** download rss feeds */
             earthquakeListFrag.refreshQuakes();
             // restart service
-
-            stopService(serviceIntent);
-            startService(serviceIntent);
+            Earthquake.startService(EarthquakeUpdateService.class, this);
 
         } else if (requestCode == SHOW_SEARCH_RESULTS) {
             searchView.setText("");
@@ -132,6 +131,60 @@ public class Earthquake extends Activity {
         minimumMagnitude = Integer.parseInt(prefs.getString(PreferencesActivity.PREF_MIN_MAG, "3"));
         updateFreq = Integer.parseInt(prefs.getString(PreferencesActivity.PREF_UPDATE_FREQ, "60"));
         autoUpdateChecked = prefs.getBoolean(PreferencesActivity.PREF_AUTO_UPDATE, false);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see android.app.Activity#onDestroy()
+     */
+    @Override
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        Earthquake.stopService(EarthquakeUpdateService.class, this);
+    }
+
+    /**
+     * to start service if it is not running
+     * 
+     * @param class1
+     *            the service class
+     * @param context
+     *            the package context
+     */
+    private static void startService(Class<?> class1, Context context) {
+        if (isServiceRunning(class1, context)) {
+            Log.d("EARTHQUAKE_SERVICE", "service started: " + class1.getName().toString());
+            return;
+        }
+        Log.d("EARTHQUAKE_SERVICE", "start servie: " + class1.getName());
+        context.startService(new Intent(context, class1));
+    }
+
+    private static boolean isServiceRunning(Class<?> class1, Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (class1.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * to start service if it is not running
+     * 
+     * @param class1
+     *            the service class
+     * @param context
+     *            the package context
+     */
+    private static void stopService(Class<?> class1, Context context) {
+        if (isServiceRunning(class1, context)) {
+            Log.d("EARTHQUAKE_SERVICE", "Stop service: " + class1.getName());
+            context.stopService(new Intent(context, class1));
+        }
     }
 
 }

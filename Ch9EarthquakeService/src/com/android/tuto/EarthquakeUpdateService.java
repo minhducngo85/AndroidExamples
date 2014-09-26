@@ -87,8 +87,9 @@ public class EarthquakeUpdateService extends Service {
             updateTimer = new Timer(SERVICE_NAME);
             updateTimer.schedule(doRefesh, 0, updateFreq * 60 * 1000);
         } else {
-            FeedReader task = new FeedReader();
+            /** background thread */
             String quakeFeed = getString(R.string.quake_feed);
+            FeedReader task = new FeedReader();
             task.execute(quakeFeed);
         }
         return Service.START_STICKY;
@@ -109,22 +110,31 @@ public class EarthquakeUpdateService extends Service {
         }
     }
 
+    /***
+     * do update by timer
+     */
     private TimerTask doRefesh = new TimerTask() {
         @Override
         public void run() {
             Log.i(TAG, "doRefesh() within service called");
             String quakeFeed = getString(R.string.quake_feed);
             List<Quake> quakes = fetchEarthquakes(quakeFeed);
-            for (Quake quake : quakes) {
-                addNewQuake(quake);
-            }
+            saveNewQuakes(quakes);
         }
     };
 
-    private void addNewQuake(Quake quake) {
-        dbHelper = DatabaseHelper.getInstance(getApplicationContext());
-        if (dbHelper.findQuakeByDate(quake.getDate().getTime()) == null) {
-            dbHelper.addQuake(quake);
+    /**
+     * save list of quakes to db if they doesn't exist in db.
+     * 
+     * @param quakes
+     *            list of quakes
+     */
+    private void saveNewQuakes(List<Quake> quakes) {
+        for (Quake quake : quakes) {
+            dbHelper = DatabaseHelper.getInstance(getApplicationContext());
+            if (dbHelper.findQuakeByDate(quake.getDate().getTime()) == null) {
+                dbHelper.addQuake(quake);
+            }
         }
     }
 
@@ -268,9 +278,7 @@ public class EarthquakeUpdateService extends Service {
         @Override
         protected void onPostExecute(List<Quake> result) {
             Log.i(TAG, "onPostExecute(List<Quake> result)");
-            for (Quake quake : result) {
-                addNewQuake(quake);
-            }
+            saveNewQuakes(result);
         }
     }
 
