@@ -159,7 +159,8 @@ public class Earthquake extends Activity {
             return;
         }
         Log.d("EARTHQUAKE_SERVICE", "start servie: " + class1.getName());
-        context.startService(new Intent(context, class1));
+        Intent intent = new Intent(context, class1);
+        context.startService(intent);
     }
 
     private static boolean isServiceRunning(Class<?> class1, Context context) {

@@ -4,7 +4,6 @@ import com.android.tuto.pref.PreferencesActivity;
 import com.android.tuto.util.DatabaseHelper;
 
 import android.app.ListFragment;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
