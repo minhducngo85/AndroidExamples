@@ -4,7 +4,7 @@
         android:defaultValue="false"
         android:key="PREF_AUTO_UPDATE"
         android:summary="Select to turn on automatic update"
-        android:title="Auto refesh" />
+        android:title="Auto update" />
     <ListPreference
         android:defaultValue="60"
         android:dialogTitle="Refresh frequency"
