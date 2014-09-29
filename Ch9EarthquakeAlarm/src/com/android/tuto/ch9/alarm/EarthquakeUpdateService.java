@@ -123,7 +123,6 @@ public class EarthquakeUpdateService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "destroy service");
     }
 
     /**

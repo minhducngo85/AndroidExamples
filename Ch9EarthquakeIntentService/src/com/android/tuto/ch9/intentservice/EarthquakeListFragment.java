@@ -25,7 +25,10 @@ public class EarthquakeListFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.i(TAG, "EarthQuakeListFragment: onActivityCreated(Bundle savedInstanceState)called");
         super.onActivityCreated(savedInstanceState);
-        refreshQuakes();
+        // refreshQuakes();
+        adapter = new SimpleCursorAdapter(this.getActivity(), android.R.layout.simple_list_item_1, null,
+                new String[] { DatabaseHelper.COL_SUMMARY_3 }, new int[] { android.R.id.text1 }, 0);
+        setListAdapter(adapter);
     }
 
     /**
@@ -40,6 +43,6 @@ public class EarthquakeListFragment extends ListFragment {
         adapter = new SimpleCursorAdapter(this.getActivity(), android.R.layout.simple_list_item_1, c, new String[] { DatabaseHelper.COL_SUMMARY_3 },
                 new int[] { android.R.id.text1 }, 0);
         setListAdapter(adapter);
-        //adapter.notifyDataSetChanged();
+        // adapter.notifyDataSetChanged();
     }
 }

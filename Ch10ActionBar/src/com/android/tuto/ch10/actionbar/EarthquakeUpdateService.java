@@ -1,4 +1,4 @@
-package com.android.tuto.ch9.intentservice;
+package com.android.tuto.ch10.actionbar;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,9 +23,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.android.tuto.ch9.intentservice.data.Quake;
-import com.android.tuto.ch9.intentservice.pref.PreferencesActivity;
-import com.android.tuto.ch9.intentservice.util.DatabaseHelper;
+import com.android.tuto.ch10.actionbar.data.Quake;
+import com.android.tuto.ch10.actionbar.pref.PreferencesActivity;
+import com.android.tuto.ch10.actionbar.util.DatabaseHelper;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -47,7 +47,6 @@ import android.util.Log;
  *
  */
 public class EarthquakeUpdateService extends IntentService {
-
     /** Teh database helper */
     private DatabaseHelper dbHelper;
 
@@ -93,7 +92,7 @@ public class EarthquakeUpdateService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TAG, "oncreate()  wihtin service called");
+        // Log.i(TAG, "oncreate()  wihtin service called");
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         // create a alarm intent
@@ -143,7 +142,7 @@ public class EarthquakeUpdateService extends IntentService {
      */
     public List<Quake> fetchEarthquakes(String quakeFeed) {
         Log.i(TAG, "fetchEarthquakes(String quakeFeed) called");
-        //Log.i(TAG, "Internet source: " + quakeFeed);
+        // Log.i(TAG, "Internet source: " + quakeFeed);
         Context context = getApplicationContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         int minMag = Integer.parseInt(prefs.getString(PreferencesActivity.PREF_MIN_MAG, "3"));
@@ -249,7 +248,7 @@ public class EarthquakeUpdateService extends IntentService {
      *            list of quakes
      */
     private void saveNewQuakes(List<Quake> quakes) {
-        //Log.i(TAG, "saveNewQuakes");
+        // Log.i(TAG, "saveNewQuakes");
         for (Quake quake : quakes) {
             dbHelper = DatabaseHelper.getInstance(getApplicationContext());
             if (dbHelper.findQuakeByDate(quake.getDate().getTime()) == null) {

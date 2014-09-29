@@ -1,7 +1,6 @@
-package com.android.tuto.ch9.intentservice;
+package com.android.tuto.ch10.actionbar;
 
-
-import com.android.tuto.ch9.intentservice.pref.PreferencesActivity;
+import com.android.tuto.ch10.actionbar.pref.PreferencesActivity;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -24,7 +23,6 @@ import android.view.View;
 import android.widget.TextView;
 
 public class Earthquake extends Activity {
-
     /** Preference menu index */
     private static final int MENU_PREFERENCES = Menu.FIRST + 1;
 
@@ -216,5 +214,4 @@ public class Earthquake extends Activity {
             earthquakeListFrag.refreshQuakes();
         }
     }
-
 }
