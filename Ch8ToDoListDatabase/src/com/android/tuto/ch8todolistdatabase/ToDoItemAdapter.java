@@ -1,5 +1,6 @@
 package com.android.tuto.ch8todolistdatabase;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -29,15 +30,14 @@ public class ToDoItemAdapter extends ArrayAdapter<ToDoItem> {
 
         ToDoItem item = getItem(position);
         String task = item.getTask();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+        SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance();
+        sdf.applyPattern("dd/MM/yy");
         String createdDate = sdf.format(item.getCreatedOn());
 
         if (convertView == null) {
             // Inflate a new view if this is not an update.
             todoView = new LinearLayout(getContext());
-            String inflater = Context.LAYOUT_INFLATER_SERVICE;
-            LayoutInflater li;
-            li = (LayoutInflater) getContext().getSystemService(inflater);
+            LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             li.inflate(resource, todoView, true);
         } else {
             // Otherwise we'll update the existing View
