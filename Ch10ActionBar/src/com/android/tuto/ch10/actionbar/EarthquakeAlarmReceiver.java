@@ -11,7 +11,7 @@ public class EarthquakeAlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent startIntent = new Intent(context, EarthquakeUpdateService.class);
-        startIntent.putExtra(EarthquakeUpdateService.EXTRA_KEY_INPUT, "From Alarm Receiver");
+        startIntent.putExtra(EarthquakeUpdateService.EXTRA_KEY_INPUT, "No_Update");
         context.startService(startIntent);
     }
 

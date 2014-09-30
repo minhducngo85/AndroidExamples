@@ -62,7 +62,7 @@ public class EarthquakeUpdateService extends IntentService {
     private PendingIntent alarmIntent;
 
     /** The extra key name to send back in case of UI update */
-    public static final String EXTRA_KEY_UPDATE = "Update_Fragment";
+    public static final String EXTRA_KEY_OUTPUT = "EXTRA_KEY_OUTPUT";
 
     /** The extra key name to send back in case of UI update */
     public static final String EXTRA_KEY_INPUT = "EXTRA_KEY_INPUT";
@@ -124,11 +124,11 @@ public class EarthquakeUpdateService extends IntentService {
         // send update
         String inputValue = intent.getStringExtra(EXTRA_KEY_INPUT);
         Log.i(TAG, "Extra Info: " + inputValue);
-        if (inputValue != null && inputValue.equalsIgnoreCase("Update")) {
+        if (inputValue != null && inputValue.equals(Earthquake.UPDATE_LIST)) {
             Intent intentUpdate = new Intent();
             intentUpdate.setAction(ACTION_UPDATE);
             intentUpdate.addCategory(Intent.CATEGORY_DEFAULT);
-            intentUpdate.putExtra(EXTRA_KEY_UPDATE, "please update");
+            intentUpdate.putExtra(EXTRA_KEY_OUTPUT, "please update");
             sendBroadcast(intentUpdate);
         }
     }

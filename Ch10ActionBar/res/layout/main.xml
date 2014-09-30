@@ -10,10 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Search..." />
-    <fragment
-        android:layout_marginTop="5dp"
-        android:id="@+id/EarthquakeListFragment"
-        android:name="com.android.tuto.ch10.actionbar.EarthquakeListFragment"
+    <FrameLayout
+        android:id="@+id/EarthquakeFragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="match_parent" >
+    </FrameLayout>
 </LinearLayout>
