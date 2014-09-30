@@ -21,13 +21,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 
 public class Earthquake extends Activity {
-    /** Preference menu index */
-    private static final int MENU_PREFERENCES = Menu.FIRST + 1;
 
     /** access code to show preference activity by intent */
     private static final int SHOW_PREFERENCES = 1;
@@ -101,7 +100,9 @@ public class Earthquake extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.add(0, MENU_PREFERENCES, Menu.NONE, R.string.menu_preferences);
+        //menu.add(0, MENU_PREFERENCES, Menu.NONE, R.string.menu_preferences);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -113,7 +114,7 @@ public class Earthquake extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        if (item.getItemId() == MENU_PREFERENCES) {
+        if (item.getItemId() == R.id.menu_preferences) {
             /**
              * defines to use preference fragment(>= API level 11) or preference activity
              */
@@ -122,6 +123,9 @@ public class Earthquake extends Activity {
             // Intent intent = new Intent(this, c);
             Intent intent = new Intent(this, PreferencesActivity.class);
             startActivityForResult(intent, SHOW_PREFERENCES);
+            return true;
+        } else if (item.getItemId() == R.id.menu_refresh) {
+            startService(EarthquakeUpdateService.class, getApplicationContext(), UPDATE_LIST);
             return true;
         }
         return false;
@@ -136,9 +140,8 @@ public class Earthquake extends Activity {
         Log.i("EARTHQUAKE", "onActivityResult() called");
         if (requestCode == SHOW_PREFERENCES) {
             updateFromPreferences();
-
             // restart service
-            Earthquake.startService(EarthquakeUpdateService.class, this, UPDATE_LIST);
+            Earthquake.startService(EarthquakeUpdateService.class, this, "NO_UPDATE");
 
         }
     }

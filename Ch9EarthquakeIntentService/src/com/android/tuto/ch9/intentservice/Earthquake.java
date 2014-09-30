@@ -1,12 +1,13 @@
 package com.android.tuto.ch9.intentservice;
 
-
 import com.android.tuto.ch9.intentservice.pref.PreferencesActivity;
 
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
@@ -17,10 +18,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 public class Earthquake extends Activity {
@@ -37,26 +37,17 @@ public class Earthquake extends Activity {
 
     private MyBroadcastReceiver myBroadcastReceiver;
 
-    private TextView searchView;
-
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "EarthQuake: onCreate(Bundle savedInstanceState) called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        searchView = (TextView) findViewById(R.id.searchText);
-        searchView.setOnKeyListener(new View.OnKeyListener() {
-
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN && (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER)) {
-                    openSearchResults();
-                    return true;
-                }
-                return false;
-            }
-        });
+        // Bind the Activity's SearchableInfo to the Search View
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchableInfo searchableInfo = searchManager.getSearchableInfo(getComponentName());
+        SearchView searchView = (SearchView) findViewById(R.id.searchView);
+        searchView.setSearchableInfo(searchableInfo);
 
         // update form
         updateFromPreferences();
@@ -69,13 +60,6 @@ public class Earthquake extends Activity {
         // start service
         Earthquake.startService(EarthquakeUpdateService.class, this, "Update");
 
-    }
-
-    private void openSearchResults() {
-        String searchString = searchView.getText().toString().trim();
-        Intent intent = new Intent(this, EarthquakeSearchResults.class);
-        intent.putExtra("SEARCH_STRING", searchString);
-        startActivityForResult(intent, SHOW_SEARCH_RESULTS);
     }
 
     /*
@@ -132,8 +116,6 @@ public class Earthquake extends Activity {
                 // stop alarm if Auto_Update = false
                 stopAlarm();
             }
-        } else if (requestCode == SHOW_SEARCH_RESULTS) {
-            searchView.setText("");
         }
     }
 
