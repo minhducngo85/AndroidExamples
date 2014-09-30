@@ -32,8 +32,6 @@ public class Earthquake extends Activity {
     /** access code to show preference activity by intent */
     private static final int SHOW_PREFERENCES = 1;
 
-    private static final int SHOW_SEARCH_RESULTS = 2;
-
     private static final String TAG = "EARTHQUAKE_SERVICE";
 
     /** The constant key for extra information of intent to indicate it should update the list */
@@ -142,8 +140,6 @@ public class Earthquake extends Activity {
             // restart service
             Earthquake.startService(EarthquakeUpdateService.class, this, UPDATE_LIST);
 
-        } else if (requestCode == SHOW_SEARCH_RESULTS) {
-            // searchView.setText("");
         }
     }
 
