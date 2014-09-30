@@ -51,12 +51,6 @@ public class Earthquake extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        // Bind the Activity's SearchableInfo to the Search View
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchableInfo searchableInfo = searchManager.getSearchableInfo(getComponentName());
-        SearchView searchView = (SearchView) findViewById(R.id.searchView);
-        searchView.setSearchableInfo(searchableInfo);
-
         // update form
         updateFromPreferences();
 
@@ -100,9 +94,16 @@ public class Earthquake extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        //menu.add(0, MENU_PREFERENCES, Menu.NONE, R.string.menu_preferences);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+        
+        // Bind the Activity's SearchableInfo to the Search View
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchableInfo searchableInfo = searchManager.getSearchableInfo(getComponentName());
+       
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        searchView.setSearchableInfo(searchableInfo);
+        
         return true;
     }
 

@@ -5,12 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:paddingTop="4dp" >
-    <SearchView
-        android:id="@+id/searchView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:iconifiedByDefault="false" >
-    </SearchView>
     <fragment
         android:id="@+id/EarthquakeListFragment"
         android:name="com.android.tuto.ch10.actionbar.EarthquakeListFragment"
