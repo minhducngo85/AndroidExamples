@@ -8,6 +8,8 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
@@ -18,11 +20,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.SearchView;
 
 public class Earthquake extends Activity {
     /** Preference menu index */
@@ -40,8 +41,6 @@ public class Earthquake extends Activity {
 
     private MyBroadcastReceiver myBroadcastReceiver;
 
-    private TextView searchView;
-
     /** The list tab listener */
     private TabListener<EarthquakeListFragment> listTabListener;
 
@@ -54,18 +53,12 @@ public class Earthquake extends Activity {
         Log.i(TAG, "EarthQuake: onCreate(Bundle savedInstanceState) called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        searchView = (TextView) findViewById(R.id.searchText);
-        searchView.setOnKeyListener(new View.OnKeyListener() {
 
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN && (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER)) {
-                    openSearchResults();
-                    return true;
-                }
-                return false;
-            }
-        });
+        // Bind the Activity's SearchableInfo to the Search View
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchableInfo searchableInfo = searchManager.getSearchableInfo(getComponentName());
+        SearchView searchView = (SearchView) findViewById(R.id.searchView);
+        searchView.setSearchableInfo(searchableInfo);
 
         // update form
         updateFromPreferences();
@@ -100,13 +93,6 @@ public class Earthquake extends Activity {
         // start service
         Earthquake.startService(EarthquakeUpdateService.class, this, UPDATE_LIST);
 
-    }
-
-    private void openSearchResults() {
-        String searchString = searchView.getText().toString().trim();
-        Intent intent = new Intent(this, EarthquakeSearchResults.class);
-        intent.putExtra("SEARCH_STRING", searchString);
-        startActivityForResult(intent, SHOW_SEARCH_RESULTS);
     }
 
     /*
@@ -157,7 +143,7 @@ public class Earthquake extends Activity {
             Earthquake.startService(EarthquakeUpdateService.class, this, UPDATE_LIST);
 
         } else if (requestCode == SHOW_SEARCH_RESULTS) {
-            searchView.setText("");
+            // searchView.setText("");
         }
     }
 

@@ -5,11 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="4dp" >
-    <EditText
-        android:id="@+id/searchText"
-        android:layout_width="match_parent"
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Search..." />
+        android:iconifiedByDefault="false" >
+    </SearchView>
     <FrameLayout
         android:id="@+id/EarthquakeFragmentContainer"
         android:layout_width="match_parent"

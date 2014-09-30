@@ -3,6 +3,7 @@ package com.android.tuto.ch10.actionbar;
 import com.android.tuto.ch10.actionbar.util.DatabaseHelper;
 
 import android.app.ListActivity;
+import android.app.SearchManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.SimpleCursorAdapter;
@@ -24,8 +25,10 @@ public class EarthquakeSearchResults extends ListActivity {
         super.onCreate(savedInstanceState);
         dbHelper = DatabaseHelper.getInstance(this);
 
-        String searchString = getIntent().getExtras().getString("SEARCH_STRING");
-        Cursor cursor = dbHelper.searchQuakesAsRawData(searchString, 0);
+        // String searchString = getIntent().getExtras().getString("SEARCH_STRING");
+
+        String searchQuery = getIntent().getStringExtra(SearchManager.QUERY);
+        Cursor cursor = dbHelper.searchQuakesAsRawData(searchQuery, 0);
         adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, new String[] { DatabaseHelper.COL_SUMMARY_3 },
                 new int[] { android.R.id.text1 }, 0);
         setListAdapter(adapter);
