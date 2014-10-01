@@ -26,6 +26,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 
+/**
+ * Features:<br/>
+ * - Navigation bar for tablet and smartphone <br/>
+ * - broadcast receiver to update UI after updating database<br/>
+ * - using searchViewy<br/>
+ * - notify once a new quake has been detected.<br/>
+ * - add details view as a dialog
+ * 
+ * @author minhducngo
+ *
+ */
 public class Earthquake extends Activity {
 
     /** access code to show preference activity by intent */
@@ -75,7 +86,7 @@ public class Earthquake extends Activity {
             actionBar.addTab(mapTab);
         }
 
-        // register receiver
+        // register receiver for ACTION_UPDATE
         myBroadcastReceiver = new MyBroadcastReceiver();
         IntentFilter intentFilter_update = new IntentFilter(EarthquakeUpdateService.ACTION_UPDATE);
         intentFilter_update.addCategory(Intent.CATEGORY_DEFAULT);
@@ -96,14 +107,14 @@ public class Earthquake extends Activity {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        
+
         // Bind the Activity's SearchableInfo to the Search View
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(getComponentName());
-       
+
         SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
         searchView.setSearchableInfo(searchableInfo);
-        
+
         return true;
     }
 

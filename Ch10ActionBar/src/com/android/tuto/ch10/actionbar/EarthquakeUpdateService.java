@@ -27,13 +27,20 @@ import com.android.tuto.ch10.actionbar.data.Quake;
 import com.android.tuto.ch10.actionbar.pref.PreferencesActivity;
 import com.android.tuto.ch10.actionbar.util.DatabaseHelper;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Location;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -41,7 +48,10 @@ import android.util.Log;
 
 /**
  * This is a intent service. The intent service will be destroyed once it gets the task finished. We don'T need a background task anymore, since the
- * intent service help us to do this.
+ * intent service help us to do this. <br/>
+ * 
+ * - adding notification whenever new earthquake is detected and saved into database<
+ * 
  * 
  * @author minhducngo
  *
@@ -53,6 +63,7 @@ public class EarthquakeUpdateService extends IntentService {
     /** TO update back the ui */
     public static final String ACTION_UPDATE = "com.android.tuto.ch9.ACTION_UPDATE";
 
+    /** The constant string for logcat */
     private String TAG = "EARTHQUAKE_SERVICE";
 
     /** The alarm manager */
@@ -66,6 +77,12 @@ public class EarthquakeUpdateService extends IntentService {
 
     /** The extra key name to send back in case of UI update */
     public static final String EXTRA_KEY_INPUT = "EXTRA_KEY_INPUT";
+
+    /** The notification builder */
+    private Notification.Builder notificationBuilder;
+
+    /** Teh notification id */
+    public static final int NOTIFICATION_ID = 1;
 
     public EarthquakeUpdateService(String name) {
         super(name);
@@ -99,6 +116,10 @@ public class EarthquakeUpdateService extends IntentService {
         String ALARM_ACTION = EarthquakeAlarmReceiver.ACTION_REFRESH_QUAKE_ALARM;
         Intent intentToFire = new Intent(ALARM_ACTION);
         alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intentToFire, 0);
+
+        // initialize the notification builder
+        notificationBuilder = new Notification.Builder(this);
+        notificationBuilder.setAutoCancel(true).setTicker("Earthquake detected").setSmallIcon(android.R.drawable.ic_notification_overlay);
     }
 
     @Override
@@ -252,8 +273,49 @@ public class EarthquakeUpdateService extends IntentService {
         for (Quake quake : quakes) {
             dbHelper = DatabaseHelper.getInstance(getApplicationContext());
             if (dbHelper.findQuakeByDate(quake.getDate().getTime()) == null) {
+                // trigger a notification
+                broadcastNotification(quake);
+
                 dbHelper.addQuake(quake);
             }
         }
+    }
+
+    @SuppressWarnings("deprecation")
+    @SuppressLint("NewApi")
+    private void broadcastNotification(Quake quake) {
+        Intent activityIntent = new Intent(this, Earthquake.class);
+        PendingIntent launchIntent = PendingIntent.getActivity(this, 0, activityIntent, 0);
+        notificationBuilder.setContentIntent(launchIntent).setWhen(quake.getDate().getTime()).setContentTitle("M: " + quake.getMagnitude());
+        notificationBuilder.setContentText(quake.getDetails());
+
+        /** to make it more interesting */
+        if (quake.getMagnitude() > 6) {
+            Uri ringURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            notificationBuilder.setSound(ringURI);
+        }
+
+        double vibrateLength = 100 * Math.exp(0.53 * quake.getMagnitude());
+        long[] vibrate = new long[] { 100, 100, (long) vibrateLength };
+        notificationBuilder.setVibrate(vibrate);
+
+        int color;
+        if (quake.getMagnitude() < 5.4) {
+            color = Color.GREEN;
+        } else if (quake.getMagnitude() < 6) {
+            color = Color.YELLOW;
+        } else {
+            color = Color.RED;
+        }
+        notificationBuilder.setLights(color, (int) vibrateLength, (int) vibrateLength);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification notif;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            notif = notificationBuilder.getNotification();
+        } else {
+            notif = notificationBuilder.build();
+        }
+        notificationManager.notify((int) quake.getDate().getTime(), notif);
     }
 }
