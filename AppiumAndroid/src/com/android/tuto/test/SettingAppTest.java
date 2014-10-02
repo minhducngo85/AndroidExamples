@@ -3,7 +3,7 @@ package com.android.tuto.test;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import com.vwinfotainment.swtest.func.SettingApp;
+import com.android.tuto.app.SettingApp;
 
 public class SettingAppTest {
 

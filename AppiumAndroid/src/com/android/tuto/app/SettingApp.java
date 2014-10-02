@@ -1,4 +1,4 @@
-package com.vwinfotainment.swtest.func;
+package com.android.tuto.app;
 
 import io.appium.java_client.AppiumDriver;
 
