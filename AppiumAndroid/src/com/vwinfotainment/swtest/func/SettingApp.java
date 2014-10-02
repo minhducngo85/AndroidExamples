@@ -4,6 +4,7 @@ import io.appium.java_client.AppiumDriver;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -93,9 +94,16 @@ public class SettingApp {
             switchOnOff.click();
             waitForVisible(By.name("Only visible to paired devices. Tap to make visible to other devices."), 10);
         }
-        WebElement checkboxEl = driver.findElement(By.className("android.widget.CheckBox"));
-        if (checkboxEl.getAttribute("checked").equalsIgnoreCase("false")) {
-            checkboxEl.click();
+
+        // WebElement visibleForPairedDevices = driver.findElement(By
+        // .xpath("//android.widget.TextView[contains(@text,'Only visible to paired devices')]"));
+        // make the device visible for searching
+        List<WebElement> textViews = driver.findElements(By.className("android.widget.TextView"));
+        for (WebElement el : textViews) {
+            if (el.getText().contains("Only visible to paired devices")) {
+                el.click();
+                break;
+            }
         }
         Thread.sleep(3000);
     }
@@ -112,13 +120,9 @@ public class SettingApp {
         wifi.click();
 
         WebElement switchOnOff = driver.findElement(By.className("android.widget.Switch"));
-        if (!switchOnOff.getText().equalsIgnoreCase("on")) {
+        if (!switchOnOff.getText().equalsIgnoreCase("ON")) {
             switchOnOff.click();
-            waitForVisible(By.name("Wi-Fi networks"), 10);
-        }
-        WebElement checkboxEl = driver.findElement(By.className("android.widget.CheckBox"));
-        if (checkboxEl.getAttribute("checked").equalsIgnoreCase("false")) {
-            checkboxEl.click();
+            waitForVisible(By.xpath("//android.widget.Switch[contains(@text,'ON')]"), 20);
         }
         Thread.sleep(3000);
     }
@@ -141,7 +145,7 @@ public class SettingApp {
     }
 
     public void waitForVisible(final By by, int waitTime) {
-        int timeoutInSeconds = 90;
+        int timeoutInSeconds = 10;
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         for (int attempt = 0; attempt < waitTime; attempt++) {
             try {
