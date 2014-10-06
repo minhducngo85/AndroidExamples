@@ -67,7 +67,7 @@ public class SettingApp {
     }
 
     /**
-     * Precondition: setting application is opened.
+     * Precondition: setting application is open.
      * 
      * This function will turn on Bluetooth on the device and make it visible for searching.
      * 
@@ -75,10 +75,9 @@ public class SettingApp {
      * @throws InterruptedException
      */
     public void turnOnBT() throws MalformedURLException, InterruptedException {
-        /** run steps */
+        //turn on Bluetooth
         WebElement bluetooth = driver.findElement(By.name("Bluetooth"));
         bluetooth.click();
-
         WebElement switchOnOff = driver.findElement(By.className("android.widget.Switch"));
         if (!switchOnOff.getText().equalsIgnoreCase("on")) {
             switchOnOff.click();
