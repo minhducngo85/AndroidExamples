@@ -81,12 +81,13 @@ public class SettingApp {
         WebElement switchOnOff = driver.findElement(By.className("android.widget.Switch"));
         if (!switchOnOff.getText().equalsIgnoreCase("on")) {
             switchOnOff.click();
-            waitForVisible(By.name("Only visible to paired devices. Tap to make visible to other devices."), 10);
+            // wait for the screen
+            waitForVisible(By.xpath("//android.widget.TextView[contains(@text,'visible to') or contains(@text,'Visible to')]"), 20);
         }
         // make the device visible for searching
         List<WebElement> textViews = driver.findElements(By.className("android.widget.TextView"));
         for (WebElement el : textViews) {
-            if (el.getText().contains("Only visible to paired devices")) {
+            if (el.getText().contains("Only visible to paired devices") || el.getText().contains("Not visible to other")) {
                 el.click();
                 break;
             }
@@ -95,7 +96,7 @@ public class SettingApp {
     }
 
     /**
-     * Precondition: setting application is opened.
+     * Precondition: scontains(@text,'visible to')etting application is opened.
      * 
      * @throws MalformedURLException
      * @throws InterruptedException

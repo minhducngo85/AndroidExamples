@@ -14,11 +14,11 @@ public class SettingAppTest {
     //static final String DEVICE_1_SW_VERSION = "4.1.2";
 
     @Test
-    public void apiDemo() throws Exception {
+    public void pairDevicesOverBT() throws Exception {
         SettingApp settingApp = new SettingApp(DEVICE_0_ID, DEVICE_0_SW_VERSION);
         settingApp.openSettingApp();
         settingApp.turnOnBT();
-        settingApp.waitForVisible(By.name("Bluetooth pairing request"), 50);
+        settingApp.waitForVisible(By.name("Bluetooth pairing request"), 100);
         settingApp.acceptBTPairingrequest();
         settingApp.quit();
 
