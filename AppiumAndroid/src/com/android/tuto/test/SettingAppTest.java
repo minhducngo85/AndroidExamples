@@ -10,8 +10,8 @@ public class SettingAppTest {
     static final String DEVICE_0_ID = "27688e90";
     static final String DEVICE_0_SW_VERSION = "4.4.2";
     
-    static final String DEVICE_1_ID = "4df175fb4a656f73";
-    static final String DEVICE_1_SW_VERSION = "4.1.2";
+    //static final String DEVICE_1_ID = "4df175fb4a656f73";
+    //static final String DEVICE_1_SW_VERSION = "4.1.2";
 
     @Test
     public void apiDemo() throws Exception {
@@ -22,9 +22,9 @@ public class SettingAppTest {
         settingApp.acceptBTPairingrequest();
         settingApp.quit();
 
-        settingApp.openSettingApp();
-        settingApp.enbaleWiFi();
-        settingApp.quit();
+        //settingApp.openSettingApp();
+        //settingApp.enbaleWiFi();
+        //settingApp.quit();
     }
 
 }

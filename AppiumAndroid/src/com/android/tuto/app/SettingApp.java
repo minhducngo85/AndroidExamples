@@ -38,7 +38,6 @@ public class SettingApp {
         this.deviceId = deviceId;
         this.swVersion = swVersion;
         /** Setup */
-
         capabilities = new DesiredCapabilities();
         capabilities.setCapability(CapabilityType.BROWSER_NAME, "");
         capabilities.setCapability(CapabilityType.PLATFORM, "Android");
@@ -50,17 +49,6 @@ public class SettingApp {
         capabilities.setCapability("appActivity", ".Settings");
         // for real device
         capabilities.setCapability("device ID", this.deviceId);
-
-        // capabilities = new DesiredCapabilities();
-        // //capabilities.setCapability("appium-version", "1.1");
-        // capabilities.setCapability("automationName", "Selendroid");
-        // capabilities.setCapability("platformName", "Android");
-        // capabilities.setCapability("deviceType", "Phone");
-        // capabilities.setCapability("deviceName", "Android Emulator");
-        // capabilities.setCapability("platformVersion", "4.1");
-        // capabilities.setCapability("device ID", this.deviceId);
-        // capabilities.setCapability("appPackage", "com.android.settings");
-        // capabilities.setCapability("appActivity", ".Settings");
     }
 
     public void quit() {
@@ -81,6 +69,8 @@ public class SettingApp {
     /**
      * Precondition: setting application is opened.
      * 
+     * This function will turn on Bluetooth on the device and make it visible for searching.
+     * 
      * @throws MalformedURLException
      * @throws InterruptedException
      */
@@ -94,9 +84,6 @@ public class SettingApp {
             switchOnOff.click();
             waitForVisible(By.name("Only visible to paired devices. Tap to make visible to other devices."), 10);
         }
-
-        // WebElement visibleForPairedDevices = driver.findElement(By
-        // .xpath("//android.widget.TextView[contains(@text,'Only visible to paired devices')]"));
         // make the device visible for searching
         List<WebElement> textViews = driver.findElements(By.className("android.widget.TextView"));
         for (WebElement el : textViews) {
@@ -157,5 +144,4 @@ public class SettingApp {
         }
         wait.until(ExpectedConditions.visibilityOfElementLocated(by));
     }
-
 }
