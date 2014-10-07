@@ -75,7 +75,7 @@ public class SettingApp {
      * @throws InterruptedException
      */
     public void turnOnBT() throws MalformedURLException, InterruptedException {
-        //turn on Bluetooth
+        // turn on Bluetooth
         WebElement bluetooth = driver.findElement(By.name("Bluetooth"));
         bluetooth.click();
         WebElement switchOnOff = driver.findElement(By.className("android.widget.Switch"));
@@ -131,6 +131,14 @@ public class SettingApp {
         ok.click();
     }
 
+    /**
+     * wait for the screen till the specific element appears
+     * 
+     * @param by
+     *            the element should be displayed on the screen
+     * @param waitTime
+     *            the waiting time in second
+     */
     public void waitForVisible(final By by, int waitTime) {
         int timeoutInSeconds = 10;
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);

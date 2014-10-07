@@ -18,6 +18,7 @@ public class SettingAppTest {
         SettingApp settingApp = new SettingApp(DEVICE_0_ID, DEVICE_0_SW_VERSION);
         settingApp.openSettingApp();
         settingApp.turnOnBT();
+        /** wait for pairing request from head unit*/
         settingApp.waitForVisible(By.name("Bluetooth pairing request"), 100);
         settingApp.acceptBTPairingrequest();
         settingApp.quit();
