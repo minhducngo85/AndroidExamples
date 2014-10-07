@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Compass</string>
+    <string name="action_settings">Settings</string>
+    <string name="cardianl_north">N</string>
+    <string name="cardianl_east">E</string>
+    <string name="cardianl_south">S</string>
+    <string name="cardianl_west">W</string>
+</resources>
