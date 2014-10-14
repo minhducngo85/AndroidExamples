@@ -24,8 +24,6 @@ public class EmployeeList extends ListActivity {
     /** The data base helper */
     private DatabaseHelper dbHelper;
 
-    /** The list view */
-    // private ListView employeeListView;
 
     /*
      * (non-Javadoc)
