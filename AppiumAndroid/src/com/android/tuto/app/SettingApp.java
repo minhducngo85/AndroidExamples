@@ -15,8 +15,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SettingApp {
-
-    private static final String url = "http://127.0.0.1:4723/wd/hub";
+    
+    private String url = "http://127.0.0.1:4723/wd/hub";
 
     private String deviceId = "";
 
@@ -33,7 +33,7 @@ public class SettingApp {
         return driver;
     }
 
-    public SettingApp(String deviceId, String swVersion) {
+    public SettingApp(String deviceId, String swVersion, String url) {
         super();
         this.deviceId = deviceId;
         this.swVersion = swVersion;
@@ -49,6 +49,7 @@ public class SettingApp {
         capabilities.setCapability("appActivity", ".Settings");
         // for real device
         capabilities.setCapability("device ID", this.deviceId);
+        this.url = url;
     }
 
     public void quit() {

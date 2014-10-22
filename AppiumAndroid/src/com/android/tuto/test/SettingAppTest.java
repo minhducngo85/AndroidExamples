@@ -1,7 +1,6 @@
 package com.android.tuto.test;
 
 import org.junit.Test;
-import org.openqa.selenium.By;
 
 import com.android.tuto.app.SettingApp;
 
@@ -15,17 +14,21 @@ public class SettingAppTest {
 
     @Test
     public void pairDevicesOverBT() throws Exception {
-        SettingApp settingApp = new SettingApp(DEVICE_0_ID, DEVICE_0_SW_VERSION);
+        SettingApp settingApp = new SettingApp(DEVICE_0_ID, DEVICE_0_SW_VERSION,"http://127.0.0.1:4723/wd/hub");
         settingApp.openSettingApp();
-        settingApp.turnOnBT();
+        //settingApp.turnOnBT();
         /** wait for pairing request from head unit*/
-        settingApp.waitForVisible(By.name("Bluetooth pairing request"), 100);
-        settingApp.acceptBTPairingrequest();
-        settingApp.quit();
+        //settingApp.waitForVisible(By.name("Bluetooth pairing request"), 100);
+        //settingApp.acceptBTPairingrequest();
+        //settingApp.quit();
 
         //settingApp.openSettingApp();
         //settingApp.enbaleWiFi();
         //settingApp.quit();
+        
+        SettingApp settingApp2 = new SettingApp("emulator-5554", "4.4.2","http://127.0.0.1:4725/wd/hub");
+        settingApp2.openSettingApp();
+        //settingApp2.turnOnBT();
     }
 
 }
