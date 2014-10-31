@@ -6,8 +6,8 @@ import com.android.tuto.app.SettingApp;
 
 public class SettingAppTest {
 
-    static final String DEVICE_0_ID = "27688e90";
-    static final String DEVICE_0_SW_VERSION = "4.4.2";
+    static final String DEVICE_0_ID = "CB5A1QMDYP";
+    static final String DEVICE_0_SW_VERSION = "4.4.4";
     
     //static final String DEVICE_1_ID = "4df175fb4a656f73";
     //static final String DEVICE_1_SW_VERSION = "4.1.2";
@@ -26,7 +26,7 @@ public class SettingAppTest {
         //settingApp.enbaleWiFi();
         //settingApp.quit();
         
-        SettingApp settingApp2 = new SettingApp("emulator-5554", "4.4.2","http://127.0.0.1:4725/wd/hub");
+        SettingApp settingApp2 = new SettingApp("0146A0CD0F01B00F", "4.2.2","http://127.0.0.1:4725/wd/hub");
         settingApp2.openSettingApp();
         //settingApp2.turnOnBT();
     }

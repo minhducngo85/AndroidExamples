@@ -40,7 +40,7 @@ public class SettingApp {
         /** Setup */
         capabilities = new DesiredCapabilities();
         capabilities.setCapability(CapabilityType.BROWSER_NAME, "");
-        capabilities.setCapability(CapabilityType.PLATFORM, "Android");
+        //capabilities.setCapability(CapabilityType.PLATFORM, "Android");
         capabilities.setCapability(CapabilityType.VERSION, this.swVersion);
         capabilities.setCapability("deviceName", "Android Emulator");
         capabilities.setCapability("platformName", "Android");
